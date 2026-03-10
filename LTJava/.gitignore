@@ -1,0 +1,16 @@
+# Các file của IDE IntelliJ
+.idea/
+*.iml
+
+# Các file compile và build của Maven
+target/
+
+# Các file hệ thống và log
+*.log
+.DS_Store
+
+# File cấu hình nhạy cảm (nếu có)
+.env
+*.yaml
+*/xml
+*.properties
