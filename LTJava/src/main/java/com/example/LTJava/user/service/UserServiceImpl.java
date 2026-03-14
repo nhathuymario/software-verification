@@ -104,7 +104,7 @@ public class UserServiceImpl implements UserService {
         user.setFullName(fullName);
         user.setDateOfBirth(dob);        // lưu ngày sinh
         user.setActive(true);
-        user.addRole(role);
+
 
         // ===== 7. Lưu DB =====
         return userRepository.save(user);
@@ -152,7 +152,7 @@ public class UserServiceImpl implements UserService {
 
         // hiện tại ta cho mỗi user chỉ 1 role chính
         user.getRoles().clear();
-        user.addRole(role);
+
 
         return userRepository.save(user);
     }
