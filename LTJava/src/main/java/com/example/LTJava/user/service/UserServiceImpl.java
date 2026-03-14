@@ -45,10 +45,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(CreateUserRequest request) {
 
-        // 1. validate cccd
-
-
-        // 1. CCCD
         String cccd = request.getCccd();
         if (cccd == null || cccd.isBlank()) {
             throw new RuntimeException("CCCD không được để trống");
@@ -57,19 +53,16 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("CCCD đã tồn tại");
         }
 
-        // 2. username = cccd
         String username = cccd;
         if (userRepository.existsByUsername(username)) {
             throw new RuntimeException("Username đã tồn tại: " + username);
         }
 
-        // 3. Họ tên
         String fullName = request.getFullName();
         if (fullName == null || fullName.isBlank()) {
             throw new RuntimeException("Full name không được để trống");
         }
 
-        // 4. Ngày sinh + password
         String dobStr = request.getDateOfBirth();
         if (dobStr == null || dobStr.isBlank()) {
             throw new RuntimeException("Ngày sinh không được để trống");
@@ -83,30 +76,25 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Ngày sinh không đúng định dạng dd/MM/yyyy");
         }
 
-        // password gốc = ddMMyyyy
         String rawPassword = dob.format(DateTimeFormatter.ofPattern("ddMMyyyy"));
-
-        // MÃ HOÁ BCRYPT TRƯỚC KHI LƯU
         String hashedPassword = passwordEncoder.encode(rawPassword);
 
-        // ===== 5. Lấy role =====
         String reqRole = request.getRoleName();
         String finalRoleName = (reqRole == null || reqRole.isBlank()) ? "USER" : reqRole;
 
         Role role = roleRepository.findByName(finalRoleName)
                 .orElseGet(() -> roleRepository.save(new Role(finalRoleName)));
 
-        // ===== 6. Tạo user =====
         User user = new User();
         user.setCccd(cccd);
         user.setUsername(username);
-        user.setPassword(hashedPassword);      // dùng ngày sinh
+        user.setPassword(hashedPassword);
         user.setFullName(fullName);
-        user.setDateOfBirth(dob);        // lưu ngày sinh
+        user.setDateOfBirth(dob);
         user.setActive(true);
 
+        user.getRoles().add(role);   // QUAN TRỌNG
 
-        // ===== 7. Lưu DB =====
         return userRepository.save(user);
     }
     // ====== TẠO HÀNG LOẠT (BULK) ======
@@ -150,9 +138,8 @@ public class UserServiceImpl implements UserService {
         Role role = roleRepository.findByName(roleName)
                 .orElseGet(() -> roleRepository.save(new Role(roleName)));
 
-        // hiện tại ta cho mỗi user chỉ 1 role chính
         user.getRoles().clear();
-
+        user.getRoles().add(role);   // THÊM DÒNG NÀY
 
         return userRepository.save(user);
     }
