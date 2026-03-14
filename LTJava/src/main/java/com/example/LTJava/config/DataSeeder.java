@@ -11,7 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.Set;
 
 @Configuration
 public class DataSeeder {
@@ -23,45 +22,60 @@ public class DataSeeder {
 
         return args -> {
 
-            // ===== 1. Tạo role SYSTEM_ADMIN nếu chưa có =====
-            Role adminRole = roleRepo.findByName("SYSTEM_ADMIN")
-                    .orElseGet(() -> {
-                        Role r = new Role();
-                        r.setName("SYSTEM_ADMIN");
-                        return roleRepo.save(r);
-                    });
+            // ===== 1. Tạo các role =====
+            Role systemAdmin = createRoleIfNotExists(roleRepo, "SYSTEM_ADMIN");
+            Role lecturer = createRoleIfNotExists(roleRepo, "LECTURER");
+            Role hod = createRoleIfNotExists(roleRepo, "HOD");
+            Role aa = createRoleIfNotExists(roleRepo, "AA");
+            Role student = createRoleIfNotExists(roleRepo, "STUDENT");
+            Role principal = createRoleIfNotExists(roleRepo, "PRINCIPAL");
 
-            // ===== 2. Thông tin admin =====
-            String adminCccd = "000000000000";      // 12 số, không trùng
-            String adminUsername = adminCccd;       // username = cccd
+            // ===== 2. Seed các user =====
+            seedUser(userRepo, encoder, systemAdmin, "000000000000", "System Admin");
+            seedUser(userRepo, encoder, lecturer, "111111111111", "Lecturer User");
+            seedUser(userRepo, encoder, hod, "222222222222", "Head Of Department");
+            seedUser(userRepo, encoder, aa, "333333333333", "Academic Affairs");
+            seedUser(userRepo, encoder, student, "444444444444", "Student User");
+            seedUser(userRepo, encoder, principal, "555555555555", "Principal User");
 
-            boolean adminExists =
-                    userRepo.findByUsername(adminUsername).isPresent()
-                            || userRepo.findByCccd(adminCccd).isPresent();
-
-            if (!adminExists) {
-
-                User admin = new User();
-                admin.setCccd(adminCccd);
-                admin.setUsername(adminUsername);
-                admin.setFullName("System Admin");
-                admin.setDateOfBirth(LocalDate.of(2000, 1, 1));
-                admin.setPassword(encoder.encode("123456"));
-                admin.setActive(true);
-                admin.setRoles(new HashSet<>());
-                admin.getRoles().add(adminRole);
-                userRepo.save(admin);
-
-
-
-
-
-                userRepo.save(admin);
-                System.out.println("✅ Seeded SYSTEM_ADMIN account");
-                System.out.println("👉 Login with CCCD: " + adminCccd + " | password: 123456");
-            } else {
-                System.out.println("ℹ️ SYSTEM_ADMIN already exists, skip seeding");
-            }
         };
+    }
+
+    private Role createRoleIfNotExists(RoleRepository repo, String roleName) {
+        return repo.findByName(roleName)
+                .orElseGet(() -> {
+                    Role r = new Role();
+                    r.setName(roleName);
+                    return repo.save(r);
+                });
+    }
+
+    private void seedUser(UserRepository userRepo,
+                          PasswordEncoder encoder,
+                          Role role,
+                          String cccd,
+                          String fullName) {
+
+        if (userRepo.findByCccd(cccd).isPresent()) {
+            System.out.println("ℹ️ User " + role.getName() + " already exists");
+            return;
+        }
+
+        User user = new User();
+        user.setCccd(cccd);
+        user.setUsername(cccd);
+        user.setFullName(fullName);
+        user.setDateOfBirth(LocalDate.of(2000, 1, 1));
+        user.setPassword(encoder.encode("123456"));
+        user.setActive(true);
+
+        HashSet<Role> roles = new HashSet<>();
+        roles.add(role);
+        user.setRoles(roles);
+
+        userRepo.save(user);
+
+        System.out.println("✅ Seeded " + role.getName());
+        System.out.println("👉 Login CCCD: " + cccd + " | password: 123456");
     }
 }
