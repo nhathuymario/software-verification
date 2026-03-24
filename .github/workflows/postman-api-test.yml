@@ -1,0 +1,67 @@
+name: Postman API Test
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - feature/**
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  api-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Newman
+        run: |
+          npm install
+          mkdir -p reports
+
+      - name: Inject environment variables
+        run: |
+          sed -i 's|http://localhost:8080|${{ secrets.BASE_URL }}|g' postman/LTJava_Env.postman_environment.json
+          sed -i 's|lecturer1|${{ secrets.POSTMAN_USERNAME }}|g' postman/LTJava_Env.postman_environment.json
+          sed -i 's|123456|${{ secrets.POSTMAN_PASSWORD }}|g' postman/LTJava_Env.postman_environment.json
+          sed -i 's|PUT_ADMIN_TOKEN_HERE|${{ secrets.ADMIN_TOKEN }}|g' postman/LTJava_Env.postman_environment.json
+          sed -i 's|PUT_HOD_TOKEN_HERE|${{ secrets.HOD_TOKEN }}|g' postman/LTJava_Env.postman_environment.json
+
+      - name: Run Postman collection 1000 iterations
+        run: |
+          npx newman run postman/LTJava_Automation.postman_collection.json \
+            -e postman/LTJava_Env.postman_environment.json \
+            --iteration-count 1000 \
+            --delay-request 20 \
+            --reporters cli,htmlextra,junit,json \
+            --reporter-htmlextra-export reports/newman-report.html \
+            --reporter-junit-export reports/newman-report.xml \
+            --reporter-json-export reports/newman-report.json
+
+      - name: Upload HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: newman-html-report
+          path: reports/newman-report.html
+
+      - name: Upload JSON report
+        uses: actions/upload-artifact@v4
+        with:
+          name: newman-json-report
+          path: reports/newman-report.json
+
+      - name: Upload JUnit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: newman-junit-report
+          path: reports/newman-report.xml
