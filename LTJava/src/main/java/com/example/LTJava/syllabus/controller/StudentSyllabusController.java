@@ -2,16 +2,22 @@ package com.example.LTJava.syllabus.controller;
 
 import java.util.List;
 
-import com.example.LTJava.syllabus.entity.Course;
-import com.example.LTJava.syllabus.entity.SyllabusStatus;
-import com.example.LTJava.syllabus.repository.CourseRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.example.LTJava.auth.security.CustomUserDetails;
+import com.example.LTJava.syllabus.entity.Course;
 import com.example.LTJava.syllabus.entity.Syllabus;
+import com.example.LTJava.syllabus.repository.CourseRepository;
 import com.example.LTJava.syllabus.service.SyllabusService;
 
 @RestController
@@ -82,7 +88,7 @@ public class StudentSyllabusController {
         return ResponseEntity.ok("Đăng ký nhận thông báo thành công!");
     }
 
-    // ❌ hủy đăng ký nhận syllabus của course
+    //hủy đăng ký nhận syllabus của course
     @DeleteMapping("/subscribe/{courseId}")
     public ResponseEntity<?> unsubscribe(
             @AuthenticationPrincipal CustomUserDetails currentUser,
@@ -97,14 +103,14 @@ public class StudentSyllabusController {
     public ResponseEntity<?> notifications(@AuthenticationPrincipal CustomUserDetails currentUser) {
         return ResponseEntity.ok(syllabusService.getMyNotifications(currentUser.getUser().getId()));
     }
-
-    // ✅ unread count (để badge 🔔)
+    
+    //unread count
     @GetMapping("/notifications/unread-count")
     public ResponseEntity<Long> unreadCount(@AuthenticationPrincipal CustomUserDetails currentUser) {
         return ResponseEntity.ok(syllabusService.countUnread(currentUser.getUser().getId()));
     }
 
-    // ✅ mark 1 notification as read
+    //mark 1 notification as read
     @PatchMapping("/notifications/{id}/read")
     public ResponseEntity<?> markRead(
             @AuthenticationPrincipal CustomUserDetails currentUser,
@@ -114,7 +120,7 @@ public class StudentSyllabusController {
         return ResponseEntity.ok().build();
     }
 
-    // ✅ mark all as read
+    //mark all as read
     @PostMapping("/notifications/read-all")
     public ResponseEntity<?> readAll(@AuthenticationPrincipal CustomUserDetails currentUser) {
         syllabusService.readAllNotifications(currentUser.getUser().getId());

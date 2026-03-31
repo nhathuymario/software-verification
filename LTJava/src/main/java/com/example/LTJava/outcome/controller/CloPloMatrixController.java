@@ -1,10 +1,17 @@
 package com.example.LTJava.outcome.controller;
 
-import com.example.LTJava.outcome.dto.*;
-import com.example.LTJava.outcome.service.MatrixService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.LTJava.outcome.dto.CloPloMatrixRes;
+import com.example.LTJava.outcome.dto.CloPloMatrixSaveReq;
+import com.example.LTJava.outcome.service.MatrixService;
 
 @RestController
 public class CloPloMatrixController {
@@ -15,7 +22,7 @@ public class CloPloMatrixController {
         this.matrixService = matrixService;
     }
 
-    // HoD/AA/Principal/Lecturer đều xem được (tùy bạn nới rộng/thu hẹp)
+    // HoD/AA/Principal/Lecturer đều xem được 
     @GetMapping("/api/syllabus/{syllabusId}/clo-plo-matrix")
     @PreAuthorize("hasAnyRole('LECTURER','HOD','AA','PRINCIPAL','SYSTEM_ADMIN','STUDENT')")
     public ResponseEntity<CloPloMatrixRes> getMatrix(

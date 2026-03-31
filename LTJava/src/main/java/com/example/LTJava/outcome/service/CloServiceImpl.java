@@ -12,6 +12,7 @@ import com.example.LTJava.outcome.entity.Clo;
 import com.example.LTJava.outcome.repository.CloRepo;
 import com.example.LTJava.syllabus.entity.Syllabus;
 import com.example.LTJava.syllabus.entity.SyllabusStatus;
+import com.example.LTJava.syllabus.exception.ResourceNotFoundException;
 import com.example.LTJava.syllabus.repository.SyllabusRepository;
 
 @Service
@@ -62,8 +63,7 @@ public class CloServiceImpl implements CloService {
         validate(req);
 
         Clo c = cloRepo.findById(cloId)
-                .orElseThrow(() -> new IllegalArgumentException("CLO not found: " + cloId));
-
+                .orElseThrow(() -> new ResourceNotFoundException("CLO not found: " + cloId));
         // khóa theo status syllabus
         getEditableSyllabusOrThrow(c.getSyllabus().getId());
 
@@ -78,14 +78,14 @@ public class CloServiceImpl implements CloService {
     @Transactional
     public void delete(Long cloId) {
         Clo c = cloRepo.findById(cloId)
-                .orElseThrow(() -> new IllegalArgumentException("CLO not found: " + cloId));
+                .orElseThrow(() -> new ResourceNotFoundException("CLO not found: " + cloId));
         getEditableSyllabusOrThrow(c.getSyllabus().getId());
         cloRepo.delete(c);
     }
 
     private Syllabus getEditableSyllabusOrThrow(Long syllabusId) {
         Syllabus s = syllabusRepo.findById(syllabusId)
-                .orElseThrow(() -> new IllegalArgumentException("Syllabus not found: " + syllabusId));
+                .orElseThrow(() -> new ResourceNotFoundException("Syllabus not found: " + syllabusId));
         if (!EDITABLE.contains(s.getStatus())) {
             throw new IllegalStateException("Syllabus is not editable in status: " + s.getStatus());
         }
