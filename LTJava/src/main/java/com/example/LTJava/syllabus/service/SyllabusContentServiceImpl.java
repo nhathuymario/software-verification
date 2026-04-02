@@ -10,8 +10,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.LTJava.outcome.entity.Clo;
 import com.example.LTJava.outcome.entity.CloPloMap;
@@ -22,6 +24,7 @@ import com.example.LTJava.syllabus.dto.CourseOutcomesRequest;
 import com.example.LTJava.syllabus.entity.Syllabus;
 import com.example.LTJava.syllabus.entity.SyllabusContent;
 import com.example.LTJava.syllabus.entity.SyllabusStatus;
+import com.example.LTJava.syllabus.exception.ResourceNotFoundException;
 import com.example.LTJava.syllabus.repository.SyllabusContentRepository;
 import com.example.LTJava.syllabus.repository.SyllabusRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -75,16 +78,16 @@ public class SyllabusContentServiceImpl implements SyllabusContentService {
 
         // Tải syllabus và kiểm tra quyền sửa theo trạng thái + chủ sở hữu
         Syllabus s = syllabusRepo.findById(syllabusId)
-                .orElseThrow(() -> new IllegalArgumentException("Syllabus not found: " + syllabusId));
+                .orElseThrow(() -> new ResourceNotFoundException("Syllabus not found: " + syllabusId));
 
         // Validate: Lecturer có thể edit nếu syllabus ở trạng thái DRAFT
         if (!EDITABLE.contains(s.getStatus())) {
-            throw new IllegalStateException("Syllabus is not editable in status: " + s.getStatus());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Syllabus is not editable in status: " + s.getStatus());
         }
 
         // Validate: Chỉ lecturer sở hữu syllabus mới được edit
         if (!s.getCreatedBy().getId().equals(lecturerId)) {
-            throw new IllegalStateException("Only syllabus owner can edit course outcomes");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only syllabus owner can edit course outcomes");
         }
 
         // Lấy (hoặc khởi tạo) bản ghi syllabus_content để lưu snapshot JSON

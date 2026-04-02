@@ -2,6 +2,7 @@ package com.example.LTJava.user.controller;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.MediaType;
@@ -29,7 +30,7 @@ public class UserController {
 
     // Tạo 1 tài khoản
     @PostMapping("/create")
-    public ResponseEntity<User> createUser(@RequestBody CreateUserRequest request) {
+    public ResponseEntity<User> createUser(@Valid @RequestBody CreateUserRequest request) {
         User created = userService.createUser(request);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
