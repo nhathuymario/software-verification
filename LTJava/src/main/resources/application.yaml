@@ -3,9 +3,9 @@ spring:
     name: LTJava
 
   datasource:
-    url: jdbc:mysql://localhost:3306/LTJava?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/LTJavaTest?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: root
-    password:
+    password: 123456
 
   jpa:
     hibernate:
@@ -22,7 +22,7 @@ spring:
       port: 6379
 
   # ===== CACHE =====
-  cache:
+  cache:  
     type: redis
     redis:
       time-to-live: 10m
