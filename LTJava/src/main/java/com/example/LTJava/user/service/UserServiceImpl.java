@@ -130,49 +130,34 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User lockUser(Long userId) {
-
+        // 1. Tìm user cần khóa
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy user id = " + userId));
-        user.setActive(false); // khóa
-        return userRepository.save(user);
-
-        // 1. Tìm user mục tiêu muốn khóa
-        User targetUser = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy user id = " + userId));
 
-        // 2. Lấy thông tin người dùng hiện tại đang thực hiện thao tác (Current Admin)
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String currentUsername;
+        // 2. BVA & Security: Kiểm tra xem có phải đang tự khóa chính mình không
+        // Lấy username của Admin đang thao tác từ Spring Security
+        String currentAdminUsername = org.springframework.security.core.context.SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
 
-        if (principal instanceof UserDetails) {
-            currentUsername = ((UserDetails) principal).getUsername();
-        } else {
-            currentUsername = principal.toString();
-        }
-
-        // 3. BVA & Security: Chặn tự khóa bản thân
-        if (targetUser.getUsername().equals(currentUsername)) {
+        if (user.getUsername().equals(currentAdminUsername)) {
             throw new RuntimeException("Bạn không thể tự khóa tài khoản của chính mình!");
         }
 
-        // 4. BVA: Chặn khóa người đã bị khóa
-        if (!targetUser.isActive()) {
+        // 3. BVA: Kiểm tra trạng thái biên (Nếu đã khóa rồi thì không khóa nữa)
+        if (!user.isActive()) {
             throw new RuntimeException("Người dùng này hiện đang bị khóa rồi.");
         }
 
-        // 5. Thực hiện khóa
-        targetUser.setActive(false);
-        return userRepository.save(targetUser);
-
+        // 4. Thực hiện khóa
+        user.setActive(false);
+        return userRepository.save(user);
     }
 
     @Override
     public User unlockUser(Long userId) {
         User user = userRepository.findById(userId)
-
-                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy user id = " + userId));
-        user.setActive(true); // mở khóa
-
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy user id = " + userId));
 
         // BVA: Nếu đã active (true) thì không cho mở khóa nữa
