@@ -12,7 +12,7 @@ import com.example.LTJava.outcome.entity.Clo;
 import com.example.LTJava.outcome.repository.CloRepo;
 import com.example.LTJava.syllabus.entity.Syllabus;
 import com.example.LTJava.syllabus.entity.SyllabusStatus;
-import com.example.LTJava.syllabus.exception.ResourceNotFoundException;
+import com.example.LTJava.exception.ResourceNotFoundException;
 import com.example.LTJava.syllabus.repository.SyllabusRepository;
 
 @Service

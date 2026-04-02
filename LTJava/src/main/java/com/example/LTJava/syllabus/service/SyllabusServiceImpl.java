@@ -19,7 +19,7 @@ import com.example.LTJava.syllabus.entity.Subscription;
 import com.example.LTJava.syllabus.entity.Syllabus;
 import com.example.LTJava.syllabus.entity.SyllabusHistory;
 import com.example.LTJava.syllabus.entity.SyllabusStatus;
-import com.example.LTJava.syllabus.exception.ResourceNotFoundException;
+import com.example.LTJava.exception.ResourceNotFoundException;
 import com.example.LTJava.syllabus.repository.CourseRepository;
 import com.example.LTJava.syllabus.repository.NotificationRepository;
 import com.example.LTJava.syllabus.repository.SubscriptionRepository;

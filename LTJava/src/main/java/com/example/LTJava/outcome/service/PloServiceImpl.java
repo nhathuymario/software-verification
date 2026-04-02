@@ -9,7 +9,7 @@ import com.example.LTJava.outcome.dto.PloDto;
 import com.example.LTJava.outcome.dto.PloUpsertReq;
 import com.example.LTJava.outcome.entity.Plo;
 import com.example.LTJava.outcome.repository.PloRepo;
-import com.example.LTJava.syllabus.exception.ResourceNotFoundException;
+import com.example.LTJava.exception.ResourceNotFoundException;
 
 @Service
 public class PloServiceImpl implements PloService {

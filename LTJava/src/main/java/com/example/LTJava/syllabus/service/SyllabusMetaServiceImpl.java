@@ -3,12 +3,11 @@ package com.example.LTJava.syllabus.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.LTJava.syllabus.exception.ResourceNotFoundException;
+import com.example.LTJava.exception.ResourceNotFoundException;
 import com.example.LTJava.syllabus.entity.Course;
 import com.example.LTJava.syllabus.dto.SyllabusMetaDto;
 import com.example.LTJava.syllabus.entity.Syllabus;
 import com.example.LTJava.syllabus.repository.SyllabusRepository;
-import com.example.LTJava.syllabus.service.SyllabusMetaService;
 
 @Service
 public class SyllabusMetaServiceImpl implements SyllabusMetaService {

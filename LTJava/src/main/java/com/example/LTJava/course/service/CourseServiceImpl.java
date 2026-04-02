@@ -10,7 +10,7 @@ import com.example.LTJava.course.dto.AssignLecturerRequest;
 import com.example.LTJava.course.dto.CreateCourseRequest;
 import com.example.LTJava.course.entity.Course1;
 import com.example.LTJava.course.repository.CourseRepository1;
-import com.example.LTJava.syllabus.exception.ResourceNotFoundException;
+import com.example.LTJava.exception.ResourceNotFoundException;
 import com.example.LTJava.user.entity.User;
 import com.example.LTJava.user.repository.UserRepository;
 

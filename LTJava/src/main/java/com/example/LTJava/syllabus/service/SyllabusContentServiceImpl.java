@@ -24,7 +24,7 @@ import com.example.LTJava.syllabus.dto.CourseOutcomesRequest;
 import com.example.LTJava.syllabus.entity.Syllabus;
 import com.example.LTJava.syllabus.entity.SyllabusContent;
 import com.example.LTJava.syllabus.entity.SyllabusStatus;
-import com.example.LTJava.syllabus.exception.ResourceNotFoundException;
+import com.example.LTJava.exception.ResourceNotFoundException;
 import com.example.LTJava.syllabus.repository.SyllabusContentRepository;
 import com.example.LTJava.syllabus.repository.SyllabusRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
