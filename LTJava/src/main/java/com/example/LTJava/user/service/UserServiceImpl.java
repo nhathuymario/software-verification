@@ -13,13 +13,15 @@ import com.example.LTJava.user.dto.UserImportRow;
 import com.example.LTJava.user.importer.ExcelUserImporter;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
-import java.util.Optional;
-import java.util.ArrayList;
+//import java.util.Optional;
+//import java.util.ArrayList;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -112,17 +114,46 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User lockUser(Long userId) {
-        User user = userRepository.findById(userId)
+        // 1. Tìm user mục tiêu muốn khóa
+        User targetUser = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy user id = " + userId));
-        user.setActive(false); // khóa
-        return userRepository.save(user);
+
+        // 2. Lấy thông tin người dùng hiện tại đang thực hiện thao tác (Current Admin)
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String currentUsername;
+
+        if (principal instanceof UserDetails) {
+            currentUsername = ((UserDetails) principal).getUsername();
+        } else {
+            currentUsername = principal.toString();
+        }
+
+        // 3. BVA & Security: Chặn tự khóa bản thân
+        if (targetUser.getUsername().equals(currentUsername)) {
+            throw new RuntimeException("Bạn không thể tự khóa tài khoản của chính mình!");
+        }
+
+        // 4. BVA: Chặn khóa người đã bị khóa
+        if (!targetUser.isActive()) {
+            throw new RuntimeException("Người dùng này hiện đang bị khóa rồi.");
+        }
+
+        // 5. Thực hiện khóa
+        targetUser.setActive(false);
+        return userRepository.save(targetUser);
     }
 
     @Override
     public User unlockUser(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy user id = " + userId));
-        user.setActive(true); // mở khóa
+
+        // BVA: Nếu đã active (true) thì không cho mở khóa nữa
+        if (user.isActive()) {
+            throw new RuntimeException("Người dùng này hiện đang hoạt động, không cần mở khóa.");
+        }
+
+        user.setActive(true);
         return userRepository.save(user);
     }
 
@@ -135,11 +166,18 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Role name không được để trống");
         }
 
+        // BVA: Kiểm tra xem user đã có role này chưa để tránh update thừa
+        boolean alreadyHasRole = user.getRoles().stream()
+                .anyMatch(r -> r.getName().equalsIgnoreCase(roleName));
+        if (alreadyHasRole) {
+            throw new RuntimeException("Người dùng đã sở hữu quyền " + roleName + " rồi.");
+        }
+
         Role role = roleRepository.findByName(roleName)
-                .orElseGet(() -> roleRepository.save(new Role(roleName)));
+                .orElseThrow(() -> new RuntimeException("Role " + roleName + " không tồn tại trong hệ thống"));
 
         user.getRoles().clear();
-        user.getRoles().add(role);   // THÊM DÒNG NÀY
+        user.getRoles().add(role);
 
         return userRepository.save(user);
     }
@@ -147,11 +185,22 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void deleteUser(Long userId) {
-        if (!userRepository.existsById(userId)) {
-            throw new RuntimeException("Không tìm thấy user id = " + userId);
-        }
-        notificationRepository.deleteByUserId(userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy user id = " + userId));
 
+        // BVA & Security: Không cho phép Admin tự xóa chính mình
+        // Giả sử bạn lấy username của người đang đăng nhập từ SecurityContext
+        String currentUsername = org.springframework.security.core.context.SecurityContextHolder
+                .getContext().getAuthentication().getName();
+        if (user.getUsername().equals(currentUsername)) {
+            throw new RuntimeException("Bạn không thể tự xóa tài khoản của chính mình!");
+        }
+
+        // BVA: Kiểm tra nếu là Admin cuối cùng (Tùy nghiệp vụ)
+        // long adminCount = userRepository.countByRoleName("ADMIN");
+        // if (adminCount <= 1 && user.isAdmin()) { ... }
+
+        notificationRepository.deleteByUserId(userId);
         userRepository.deleteById(userId);
     }
 
