@@ -172,12 +172,6 @@ public class SyllabusContentServiceImpl implements SyllabusContentService {
                 .orElse(null);
     }
 
-    /**
-     * Đồng bộ bảng chuẩn hoá từ request:
-     * - Upsert danh sách CLO theo code (thêm mới hoặc cập nhật mô tả/active)
-     * - Xoá các CLO không còn trong request
-     * - Dedupe các cặp (CLO, PLO), upsert level; và prune (xoá) các mapping không còn trong payload
-     */
     private void syncClosAndMappings(Syllabus syllabus, CourseOutcomesRequest request) {
         // Lấy danh sách CLO ở request (có thể null)
         List<Map<String, String>> closReq = request.courseLearningOutcomes();

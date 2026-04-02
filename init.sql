@@ -1,12 +1,12 @@
-USE LTJava;
 -- phpMyAdmin SQL Dump
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th1 19, 2026 lúc 09:08 AM
--- Phiên bản máy phục vụ: 9.1.0
--- Phiên bản PHP: 8.2.12
+-- Host: 127.0.0.1
+-- Generation Time: Mar 25, 2026 at 06:12 AM
+-- Server version: 9.1.0
+-- PHP Version: 8.2.12
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -18,44 +18,70 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Cơ sở dữ liệu: `ltjava`
+-- Database: `ltjavatest`
 --
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `courses`
+-- Table structure for table `clo`
+--
+
+CREATE TABLE `clo` (
+  `id` bigint NOT NULL,
+  `active` bit(1) NOT NULL,
+  `code` varchar(20) NOT NULL,
+  `description` text NOT NULL,
+  `syllabus_id` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `clo_plo_map`
+--
+
+CREATE TABLE `clo_plo_map` (
+  `id` bigint NOT NULL,
+  `level` tinyint DEFAULT NULL,
+  `clo_id` bigint NOT NULL,
+  `plo_id` bigint NOT NULL
+) ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `courses`
 --
 
 CREATE TABLE `courses` (
   `id` bigint NOT NULL,
+  `academic_year` varchar(255) DEFAULT NULL,
   `code` varchar(255) NOT NULL,
   `credits` int DEFAULT NULL,
   `department` varchar(255) DEFAULT NULL,
-  `name` varchar(255) NOT NULL,
   `lecturer_id` bigint NOT NULL,
   `lecturer_username` varchar(255) NOT NULL,
-  `academic_year` varchar(255) DEFAULT NULL,
+  `name` varchar(255) NOT NULL,
   `semester` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `courses`
+-- Dumping data for table `courses`
 --
 
-INSERT INTO `courses` (`id`, `code`, `credits`, `department`, `name`, `lecturer_id`, `lecturer_username`, `academic_year`, `semester`) VALUES
-(1, 'CS101', 3, 'CS', 'Intro to Programming', 0, '', NULL, NULL),
-(4, 'CS103', 3, 'CS', 'Data Structures', 0, '', NULL, NULL),
-(5, 'SE202', 4, 'Công nghệ phần mềm', 'Kỹ thuật phần mềm', 1, '', NULL, NULL),
-(6, 'IT001', 3, 'CNTT', 'Lập trình Java', 9, '', NULL, NULL),
-(7, 'IT002', 3, 'CNTT', 'Lập trình mạng', 9, '012345676633', NULL, NULL),
-(8, 'IT003', 3, 'CNTT', 'Lập trình web', 9, '012345676633', NULL, NULL),
-(9, 'HD001', 3, 'CNTT', 'Hệ điều hành', 9, '012345676633', '2026-2027', '1');
+INSERT INTO `courses` (`id`, `academic_year`, `code`, `credits`, `department`, `lecturer_id`, `lecturer_username`, `name`, `semester`) VALUES
+(1, '2023-2024', 'IT1310', 4, 'SE', 2, '111111111111', 'Cơ sở dữ liệu 4yctwj', 'HK2'),
+(2, '2024-2025', 'IT8381', 2, 'IT', 2, '111111111111', 'Mạng máy tính 3tqr4e', 'HK1'),
+(3, '2023-2024', 'IT2658', 2, 'SE', 2, '111111111111', 'Lập trình Java hj8aje', 'HK2'),
+(4, '2023-2024', 'IT1513', 4, 'IT', 2, '111111111111', 'Cấu trúc dữ liệu gm14h', 'HK3'),
+(5, '2025-2026', 'IT9614', 3, 'IS', 2, '111111111111', 'Phát triển Web 8w5r28', 'HK2'),
+(6, '2024-2025', 'IT1765', 4, 'IT', 2, '111111111111', 'Cơ sở dữ liệu 4msa', 'HK3');
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `course_parallel`
+-- Table structure for table `course_parallel`
 --
 
 CREATE TABLE `course_parallel` (
@@ -66,7 +92,7 @@ CREATE TABLE `course_parallel` (
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `course_prerequisites`
+-- Table structure for table `course_prerequisites`
 --
 
 CREATE TABLE `course_prerequisites` (
@@ -77,7 +103,7 @@ CREATE TABLE `course_prerequisites` (
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `course_supplementary`
+-- Table structure for table `course_supplementary`
 --
 
 CREATE TABLE `course_supplementary` (
@@ -88,32 +114,76 @@ CREATE TABLE `course_supplementary` (
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `notifications`
+-- Table structure for table `notifications`
 --
 
 CREATE TABLE `notifications` (
   `id` bigint NOT NULL,
   `created_at` datetime(6) DEFAULT NULL,
-  `is_read` bit(1) NOT NULL,
   `message` varchar(255) DEFAULT NULL,
+  `is_read` bit(1) DEFAULT NULL,
   `user_id` bigint DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `notifications`
+-- Dumping data for table `notifications`
 --
 
-INSERT INTO `notifications` (`id`, `created_at`, `is_read`, `message`, `user_id`) VALUES
-(1, '2026-01-19 05:11:50.610100', b'0', 'Nóng! 🔥 HĐH vừa update content \'null\' siêu bí ẩn. Vô check xem đây là bug hay easter egg nhé! 🧐💻', 16),
-(2, '2026-01-19 05:11:52.922397', b'0', 'Cập nhật HĐH mới toanh: nội dung \'null\' đã xuất hiện! 🤯 Vô xem sự hư vô này ngay, quan trọng lắm nha. 🚨', 16),
-(3, '2026-01-19 05:40:18.805756', b'0', 'Giáo trình HĐH vừa update \'null\'. 💀 Ủa, học cái gì? Vô xem cái bug này lẹ! 😂', 16),
-(4, '2026-01-19 06:30:17.601926', b'0', 'Yo! 🤯 OS plan 1-13 tuần đã lên sóng! Nhanh tay zô xem, không là miss kèo 😂. 🚀✨', 16),
-(5, '2026-01-19 07:00:46.524775', b'1', 'O.S 👻 có deal hot! Giáo trình \'Kế hoạch 1 Tháng\' update siêu cấp vip pro. Vô check liền kẽo lỡ trend! 🚀📚✨', 16);
+INSERT INTO `notifications` (`id`, `created_at`, `message`, `is_read`, `user_id`) VALUES
+(1, '2026-03-14 16:33:07.873475', 'Thông báo phân công thẩm định giáo trình môn Cơ sở dữ liệu 4yctwj. Tên giáo trình: Auto syllabus 60204, phiên bản v1 (ID: 1). Vui lòng hoàn tất quy trình kiểm duyệt trước thời hạn: 23:59:59 ngày 20/03/2026.', b'1', 7),
+(2, '2026-03-23 13:24:31.442664', 'Kính gửi Trưởng bộ môn,\n\nSyllabus \"Microservices 8521\" (v1, ID: 3) thuộc môn Cơ sở dữ liệu 4yctwj đã được nộp và đang chờ duyệt. Kính mời Anh/Chị truy cập hệ thống để kiểm tra và thực hiện phê duyệt.', b'0', 3),
+(3, '2026-03-23 13:24:31.453061', 'Kính gửi Trưởng bộ môn,\n\nSyllabus \"Microservices 8521\" (v1, ID: 3) thuộc môn Cơ sở dữ liệu 4yctwj đã được nộp và đang chờ duyệt. Kính mời Anh/Chị truy cập hệ thống để kiểm tra và thực hiện phê duyệt.', b'0', 8),
+(4, '2026-03-23 13:24:45.343549', 'Kính gửi Trưởng bộ môn, hệ thống có syllabus mới cần duyệt (SUBMITTED).\nMôn học: Cơ sở dữ liệu 4yctwj\nSyllabus: Spring Boot 4195, v1, syllabusId=4\nVui lòng kiểm tra và thực hiện phê duyệt trên hệ thống.', b'0', 3),
+(5, '2026-03-23 13:24:45.347952', 'Kính gửi Trưởng bộ môn, hệ thống có syllabus mới cần duyệt (SUBMITTED).\nMôn học: Cơ sở dữ liệu 4yctwj\nSyllabus: Spring Boot 4195, v1, syllabusId=4\nVui lòng kiểm tra và thực hiện phê duyệt trên hệ thống.', b'0', 8),
+(6, '2026-03-23 13:24:57.104209', 'Kính gửi Trưởng bộ môn,\nHệ thống ghi nhận syllabus mới cần duyệt:\nMôn: Cơ sở dữ liệu 4yctwj\nSyllabus: Web Development 888, v1 (ID: 5)\nTrạng thái: SUBMITTED\nTrân trọng kính mời thầy/cô truy cập hệ thống để kiểm tra và thực hiện phê duyệt.', b'0', 3),
+(7, '2026-03-23 13:24:57.108442', 'Kính gửi Trưởng bộ môn,\nHệ thống ghi nhận syllabus mới cần duyệt:\nMôn: Cơ sở dữ liệu 4yctwj\nSyllabus: Web Development 888, v1 (ID: 5)\nTrạng thái: SUBMITTED\nTrân trọng kính mời thầy/cô truy cập hệ thống để kiểm tra và thực hiện phê duyệt.', b'0', 8),
+(8, '2026-03-23 13:25:00.139934', '[HOD] Có syllabus mới cần duyệt (SUBMITTED) - Cơ sở dữ liệu 4yctwj (v1), syllabusId=6', b'0', 3),
+(9, '2026-03-23 13:25:00.145935', '[HOD] Có syllabus mới cần duyệt (SUBMITTED) - Cơ sở dữ liệu 4yctwj (v1), syllabusId=6', b'0', 8);
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `roles`
+-- Table structure for table `plo`
+--
+
+CREATE TABLE `plo` (
+  `id` bigint NOT NULL,
+  `active` bit(1) NOT NULL,
+  `code` varchar(20) NOT NULL,
+  `description` text NOT NULL,
+  `scope_key` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `review_assignments`
+--
+
+CREATE TABLE `review_assignments` (
+  `id` bigint NOT NULL,
+  `completed_at` datetime(6) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `due_at` datetime(6) NOT NULL,
+  `started_at` datetime(6) DEFAULT NULL,
+  `status` enum('ASSIGNED','CANCELLED','DONE','IN_REVIEW') NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `assigned_by_id` bigint NOT NULL,
+  `reviewer_id` bigint NOT NULL,
+  `syllabus_id` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `review_assignments`
+--
+
+INSERT INTO `review_assignments` (`id`, `completed_at`, `created_at`, `due_at`, `started_at`, `status`, `updated_at`, `assigned_by_id`, `reviewer_id`, `syllabus_id`) VALUES
+(1, NULL, '2026-03-14 16:33:03.541758', '2026-03-20 16:59:59.000000', NULL, 'ASSIGNED', '2026-03-14 16:33:03.541758', 3, 7, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `roles`
 --
 
 CREATE TABLE `roles` (
@@ -122,21 +192,21 @@ CREATE TABLE `roles` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `roles`
+-- Dumping data for table `roles`
 --
 
 INSERT INTO `roles` (`id`, `name`) VALUES
 (4, 'AA'),
-(5, 'HOD'),
-(1, 'LECTURER'),
+(3, 'HOD'),
+(2, 'LECTURER'),
 (6, 'PRINCIPAL'),
-(7, 'STUDENT'),
-(2, 'SYSTEM_ADMIN');
+(5, 'STUDENT'),
+(1, 'SYSTEM_ADMIN');
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `subscriptions`
+-- Table structure for table `subscriptions`
 --
 
 CREATE TABLE `subscriptions` (
@@ -145,58 +215,45 @@ CREATE TABLE `subscriptions` (
   `user_id` bigint DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Đang đổ dữ liệu cho bảng `subscriptions`
---
-
-INSERT INTO `subscriptions` (`id`, `course_id`, `user_id`) VALUES
-(1, 9, 16);
-
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `syllabus`
+-- Table structure for table `syllabus`
 --
 
 CREATE TABLE `syllabus` (
   `id` bigint NOT NULL,
   `academic_year` varchar(20) DEFAULT NULL,
+  `ai_summary` text,
   `created_at` datetime(6) DEFAULT NULL,
   `description` varchar(4000) DEFAULT NULL,
+  `edit_note` text,
+  `keywords` text,
   `semester` varchar(20) DEFAULT NULL,
   `status` enum('AA_APPROVED','DRAFT','HOD_APPROVED','PRINCIPAL_APPROVED','PUBLISHED','REJECTED','REQUESTEDIT','SUBMITTED') NOT NULL,
   `title` varchar(255) NOT NULL,
   `updated_at` datetime(6) DEFAULT NULL,
   `version` int DEFAULT NULL,
   `course_id` bigint NOT NULL,
-  `created_by` bigint DEFAULT NULL,
-  `edit_note` text,
-  `ai_summary` text,
-  `keywords` text
+  `created_by` bigint DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `syllabus`
+-- Dumping data for table `syllabus`
 --
 
-INSERT INTO `syllabus` (`id`, `academic_year`, `created_at`, `description`, `semester`, `status`, `title`, `updated_at`, `version`, `course_id`, `created_by`, `edit_note`, `ai_summary`, `keywords`) VALUES
-(1, '2025-2026', '2025-12-12 16:52:13.329467', 'Week 1-15 plan', 'HK1', 'PUBLISHED', 'Syllabus CS101', '2026-01-13 06:56:17.466111', 2, 1, 1, NULL, 'Chương trình giảng dạy 15 tuần của môn CS101 được thiết kế để cung cấp nền tảng vững chắc về tư duy thuật toán và logic lập trình cơ bản. Sinh viên sẽ tiến hành từ việc nắm vững các cấu trúc điều khiển và hàm đến việc áp dụng các khái niệm lập trình hướng đối tượng sơ cấp và xử lý dữ liệu cơ bản.', 'Thuật toán, Cấu trúc điều khiển, Lập trình hàm, Lập trình hướng đối tượng, Cấu trúc dữ liệu'),
-(2, '2025-2026', '2025-12-15 06:45:30.133242', 'Week 1-15 plan', 'HK2', 'DRAFT', 'Syllabus CS102', '2025-12-15 06:45:30.133242', 1, 1, 1, NULL, NULL, NULL),
-(3, '2025-2026', '2025-12-15 06:48:00.355526', 'Week 1-15 plan', 'HK1', 'REJECTED', 'Syllabus CS103', '2026-01-12 09:29:02.847054', 1, 1, 2, NULL, NULL, NULL),
-(4, '2025-2026', '2026-01-11 13:28:04.325294', 'Week 1-15 plan', 'HK2', 'PUBLISHED', 'Syllabus CS104', '2026-01-17 08:07:54.782099', 5, 5, 1, NULL, 'Chương trình CS104 kéo dài 15 tuần tập trung vào việc xây dựng nền tảng lập trình vững chắc, từ các nguyên tắc cơ bản và quản lý bộ nhớ đến việc triển khai các cấu trúc dữ liệu phức tạp. Khóa học nhấn mạnh vào phân tích thuật toán và kỹ thuật tối ưu hóa nhằm đảm bảo sinh viên có khả năng phát triển các giải pháp phần mềm hiệu quả cao.', 'Cấu trúc dữ liệu, Thuật toán, Quản lý bộ nhớ, Hiệu năng hệ thống, Lập trình hướng đối tượng'),
-(5, '2025-2026', '2026-01-17 06:25:34.600929', 'Week 1-15 plan', 'HK2', 'PUBLISHED', 'Syllabus CS105', '2026-01-17 08:08:10.964535', 2, 7, 9, NULL, 'Chương trình học CS105 kéo dài 15 tuần tập trung xây dựng nền tảng vững chắc về khoa học máy tính thông qua việc giới thiệu các nguyên tắc lập trình và tư duy thuật toán. Sinh viên sẽ được trang bị kỹ năng thiết yếu để giải quyết vấn đề và triển khai các cấu trúc dữ liệu cơ bản.', 'Lập trình, Thuật toán, Khoa học máy tính, Cấu trúc dữ liệu, Tư duy máy tính'),
-(6, '2025-2026', '2026-01-17 07:35:53.164768', 'Week 1-15 plan', 'HK1', 'PRINCIPAL_APPROVED', 'Syllabus CS102', '2026-01-17 07:37:06.734935', 1, 7, 9, NULL, NULL, NULL),
-(7, '2025-2026', '2026-01-17 08:21:44.709096', 'Week 1-15 plan', 'HK2', 'REJECTED', 'Syllabus CS103', '2026-01-18 12:19:47.036883', 1, 7, 9, 'haha vui quá', NULL, NULL),
-(8, '2026-2027', '2026-01-17 09:25:17.162343', 'Week 1-15 plan', 'HK2', 'DRAFT', 'Syllabus CS108', '2026-01-17 09:56:21.054518', 1, 7, 9, NULL, NULL, NULL),
-(9, '2026-2027', '2026-01-19 04:44:07.615580', 'Week 1-15 plan', 'HK1', 'PUBLISHED', 'Syllabus CS105', '2026-01-19 05:11:57.201192', 1, 9, 9, NULL, 'Kế hoạch học tập CS105 kéo dài 15 tuần tập trung vào việc xây dựng nền tảng vững chắc về khoa học máy tính, từ các khái niệm lập trình cơ bản đến cấu trúc dữ liệu và thiết kế thuật toán sơ cấp. Chương trình được thiết kế để trang bị cho sinh viên kỹ năng giải quyết vấn đề bằng phương pháp tính toán và chuẩn bị cho các môn học chuyên sâu hơn.', 'Lập trình, Cấu trúc dữ liệu, Thuật toán, Khái niệm cơ bản, Tính toán'),
-(10, '2026-2027', '2026-01-19 05:39:36.396643', 'Week 1-15 plan', 'HK1', 'PUBLISHED', 'Syllabus CS108', '2026-01-19 05:40:23.107333', 1, 9, 9, NULL, 'Giáo trình CS108 phác thảo một lộ trình học tập toàn diện kéo dài 15 tuần, tập trung vào việc thiết lập tư duy tính toán nền tảng và năng lực lập trình cốt lõi. Khóa học tiến triển một cách hệ thống từ các cấu trúc mệnh lệnh và nguyên tắc thuật toán ban đầu đến các phương pháp luận hướng đối tượng nâng cao, thường kết thúc bằng một dự án ứng dụng thực tế quy mô lớn.', 'Tư duy Tính toán, Nguyên tắc Thuật toán, Năng lực Lập trình, Hướng Đối tượng, Lộ trình 15 Tuần'),
-(11, '2026-2027', '2026-01-19 06:28:55.428208', 'kế hoạch trong 1-13 tuần', 'HK!', 'PUBLISHED', 'CN001', '2026-01-19 06:30:17.604972', 1, 9, 9, NULL, 'Kế hoạch 1-13 tuần đại diện cho giai đoạn hoạch định tác nghiệp, tập trung chi tiết hóa các mục tiêu chiến thuật thành chuỗi hành động cụ thể và có thể đo lường được. Trọng tâm của giai đoạn này là phân bổ nguồn lực chính xác, quản lý tiến độ vi mô, và thiết lập các cơ chế kiểm soát rủi ro tức thời để đạt được các kết quả ngắn hạn theo đúng ngân sách và thời gian quy định.', 'Kế hoạch tác nghiệp, Phân bổ nguồn lực, Quản lý tiến độ, Mục tiêu ngắn hạn, Kiểm soát vi mô'),
-(12, '2026-2027', '2026-01-19 06:59:57.633838', 'kế hoạch 1 tháng', 'HK1', 'PUBLISHED', 'CN002', '2026-01-19 07:00:46.527762', 1, 9, 9, NULL, 'Kế hoạch một tháng là công cụ quản lý tác nghiệp ngắn hạn, có chức năng chuyển đổi mục tiêu chiến lược thành các nhiệm vụ cụ thể và khả thi. Việc lập kế hoạch này đảm bảo phân bổ tối ưu nguồn lực, giám sát tiến độ thường xuyên và cung cấp cơ sở dữ liệu định lượng để đánh giá hiệu suất.', 'Kế hoạch 1 tháng, Quản lý tác nghiệp, Phân bổ nguồn lực, Giám sát tiến độ, Đánh giá hiệu suất');
+INSERT INTO `syllabus` (`id`, `academic_year`, `ai_summary`, `created_at`, `description`, `edit_note`, `keywords`, `semester`, `status`, `title`, `updated_at`, `version`, `course_id`, `created_by`) VALUES
+(1, NULL, 'Chương trình đào tạo tập trung vào việc thiết lập hệ thống kiểm thử tự động nhằm tối ưu hóa quy trình kiểm định chất lượng phần mềm. Người học sẽ được trang bị kỹ năng xây dựng kịch bản và vận hành các công cụ tự động hóa để nâng cao hiệu suất trong các dự án công nghệ.', '2026-03-14 16:24:13.604426', 'Automation test 60204', NULL, 'kiểm thử tự động, kịch bản kiểm thử, đảm bảo chất lượng, tối ưu hóa quy trình, công cụ kiểm thử', NULL, 'DRAFT', 'Auto syllabus 60204', '2026-03-14 16:24:13.604426', 1, 1, 2),
+(2, NULL, 'Học phần cung cấp hệ thống kiến thức được cập nhật toàn diện nhằm tối ưu hóa tiến trình tiếp cận các khái niệm chuyên sâu và kỹ năng thực hành trong lĩnh vực 53682. Nội dung giáo trình tập trung vào việc chuẩn hóa khung lý thuyết và trang bị năng lực thích ứng cao cho người học trước những yêu cầu mới của ngành.', '2026-03-16 02:46:58.674768', 'Updated desc 53682', NULL, 'cập nhật giáo trình, khung năng lực, chuẩn hóa kiến thức, ứng dụng thực tiễn, học phần 53682', NULL, 'DRAFT', 'Updated syllabus 53682', '2026-03-16 02:47:19.164088', 1, 1, 2),
+(3, NULL, 'Học phần nghiên cứu chuyên sâu về quy trình thiết kế và triển khai các hệ thống web dựa trên nền tảng kiến trúc vi dịch vụ hiện đại. Sinh viên sẽ tập trung xây dựng các thành phần độc lập nhằm tối ưu hóa khả năng mở rộng và hiệu quả vận hành trong môi trường điện toán phân tán.', '2026-03-23 13:24:27.744304', 'Build web applications', NULL, 'Kiến trúc vi dịch vụ, Hệ thống phân tán, Khả năng mở rộng, Phát triển Web, Tính module', NULL, 'SUBMITTED', 'Microservices 8521', '2026-03-23 13:24:27.896912', 1, 1, 7),
+(4, NULL, 'Học phần này phân tích các phương pháp kiểm thử phần mềm tiên tiến và chiến lược bảo đảm chất lượng trong quy trình phát triển ứng dụng hiện đại. Người học sẽ tiếp cận các kỹ thuật triển khai khung kiểm thử tự động nhằm tối ưu hóa độ tin cậy của hệ thống trên nền tảng Spring Boot.', '2026-03-23 13:24:39.257942', 'Testing modern software', NULL, 'kiểm thử phần mềm, Spring Boot, tự động hóa, bảo đảm chất lượng, kiểm thử tích hợp', NULL, 'SUBMITTED', 'Spring Boot 4195', '2026-03-23 13:24:39.369421', 1, 1, 7),
+(5, NULL, 'Học phần này nghiên cứu các phương pháp kiểm định phần mềm đương đại nhằm nâng cao độ tin cậy và hiệu năng cho các ứng dụng web phức tạp. Sinh viên sẽ được trang bị những chiến lược đảm bảo chất lượng tiên tiến và kỹ thuật tối ưu hóa trong môi trường phát triển linh hoạt.', '2026-03-23 13:24:53.959213', 'Testing modern software', NULL, 'Kiểm thử phần mềm, Đảm bảo chất lượng, Tự động hóa, Web Development, Hiệu năng hệ thống', NULL, 'SUBMITTED', 'Web Development 888', '2026-03-23 13:24:54.071159', 1, 1, 7),
+(6, NULL, 'Lỗi xử lý AI', '2026-03-23 13:24:59.893243', 'Testing modern software', NULL, 'syllabus', NULL, 'SUBMITTED', 'Cloud Computing 6224', '2026-03-23 13:25:00.009250', 1, 1, 7);
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `syllabus_comments`
+-- Table structure for table `syllabus_comments`
 --
 
 CREATE TABLE `syllabus_comments` (
@@ -205,21 +262,43 @@ CREATE TABLE `syllabus_comments` (
   `created_at` datetime(6) DEFAULT NULL,
   `status` enum('ACTIVE','DELETED') NOT NULL,
   `updated_at` datetime(6) DEFAULT NULL,
+  `assignment_id` bigint DEFAULT NULL,
   `commenter_id` bigint NOT NULL,
   `syllabus_id` bigint NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `syllabus_comments`
+-- Dumping data for table `syllabus_comments`
 --
 
-INSERT INTO `syllabus_comments` (`id`, `content`, `created_at`, `status`, `updated_at`, `commenter_id`, `syllabus_id`) VALUES
-(1, 'Mục CLO chưa rõ, đề xuất bổ sung rubric.', '2025-12-23 13:17:14.742917', 'ACTIVE', '2025-12-23 13:17:14.742917', 9, 3);
+INSERT INTO `syllabus_comments` (`id`, `content`, `created_at`, `status`, `updated_at`, `assignment_id`, `commenter_id`, `syllabus_id`) VALUES
+(1, 'Review nội dung: cy80m', '2026-03-14 16:37:56.524760', 'ACTIVE', '2026-03-14 16:37:56.524760', 1, 7, 1),
+(2, 'Review nội dung: ld12g9', '2026-03-14 16:40:46.877580', 'ACTIVE', '2026-03-14 16:40:51.339162', 1, 7, 1);
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `syllabus_history`
+-- Table structure for table `syllabus_contents`
+--
+
+CREATE TABLE `syllabus_contents` (
+  `id` bigint NOT NULL,
+  `assessment_methods` longtext,
+  `clo_mappings` longtext,
+  `course_learning_outcomes` longtext,
+  `course_objectives` longtext,
+  `course_outline_table` longtext,
+  `description` longtext,
+  `general_info` longtext,
+  `student_duties` longtext,
+  `teaching_plan` longtext,
+  `syllabus_id` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `syllabus_history`
 --
 
 CREATE TABLE `syllabus_history` (
@@ -236,39 +315,19 @@ CREATE TABLE `syllabus_history` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `syllabus_history`
+-- Dumping data for table `syllabus_history`
 --
 
 INSERT INTO `syllabus_history` (`id`, `academic_year`, `description`, `semester`, `status`, `title`, `updated_at`, `version`, `syllabus_id`, `updated_by`) VALUES
-(1, '2025-2026', 'Week 1-15 plan', 'HK1', 'AA_APPROVED', 'Syllabus CS101', '2026-01-13 06:56:06.578537', 1, 1, 1),
-(2, '2025-2026', 'Week 1-15 plan', 'HK1', 'AA_APPROVED', 'Syllabus CS101', '2026-01-13 06:56:11.160399', 1, 1, 1),
-(3, '2025-2026', 'Week 1-15 plan', 'HK2', 'DRAFT', 'Syllabus CS105', '2026-01-17 06:25:47.087890', 1, 5, 9),
-(4, '2025-2026', 'Week 1-15 plan', 'HK1', 'DRAFT', 'Syllabus CS102', '2026-01-17 07:36:00.057574', 1, 6, 9),
-(5, '2025-2026', 'Week 1-15 plan', 'HK2', 'PRINCIPAL_APPROVED', 'Syllabus CS104', '2026-01-17 08:07:43.718711', 4, 4, 1),
-(6, '2025-2026', 'Week 1-15 plan', 'HK2', 'PRINCIPAL_APPROVED', 'Syllabus CS104', '2026-01-17 08:07:47.043954', 4, 4, 1),
-(7, '2025-2026', 'Week 1-15 plan', 'HK2', 'PRINCIPAL_APPROVED', 'Syllabus CS105', '2026-01-17 08:08:05.272355', 1, 5, 9),
-(8, '2025-2026', 'Week 1-15 plan', 'HK2', 'DRAFT', 'Syllabus CS103', '2026-01-17 08:21:48.794225', 1, 7, 9),
-(9, '2026-2027', 'Week 1-15 plan', 'HK1', 'DRAFT', 'Syllabus CS105', '2026-01-19 05:10:36.322210', 1, 9, 9),
-(10, '2026-2027', 'Week 1-15 plan', 'HK1', 'PRINCIPAL_APPROVED', 'Syllabus CS105', '2026-01-19 05:11:40.920190', 1, 9, 9),
-(11, '2026-2027', 'Week 1-15 plan', 'HK1', 'PRINCIPAL_APPROVED', 'Syllabus CS105', '2026-01-19 05:11:47.061582', 1, 9, 9),
-(12, '2026-2027', 'Week 1-15 plan', 'HK1', 'PRINCIPAL_APPROVED', 'Syllabus CS105', '2026-01-19 05:11:49.806244', 1, 9, 9),
-(13, '2026-2027', 'Week 1-15 plan', 'HK1', 'PUBLISHED', 'Syllabus CS105', '2026-01-19 05:11:55.070116', 1, 9, 9),
-(14, '2026-2027', 'Week 1-15 plan', 'HK1', 'PUBLISHED', 'Syllabus CS105', '2026-01-19 05:11:57.204793', 1, 9, 9),
-(15, '2026-2027', 'Week 1-15 plan', 'HK1', 'DRAFT', 'Syllabus CS108', '2026-01-19 05:39:42.945728', 1, 10, 9),
-(16, '2026-2027', 'Week 1-15 plan', 'HK1', 'PRINCIPAL_APPROVED', 'Syllabus CS108', '2026-01-19 05:40:08.921349', 1, 10, 9),
-(17, '2026-2027', 'Week 1-15 plan', 'HK1', 'PRINCIPAL_APPROVED', 'Syllabus CS108', '2026-01-19 05:40:15.171851', 1, 10, 9),
-(18, '2026-2027', 'Week 1-15 plan', 'HK1', 'PUBLISHED', 'Syllabus CS108', '2026-01-19 05:40:23.112662', 1, 10, 9),
-(19, '2026-2027', 'kế hoạch trong 1-13 tuần', 'HK!', 'DRAFT', 'CN001', '2026-01-19 06:29:00.673645', 1, 11, 9),
-(20, '2026-2027', 'kế hoạch trong 1-13 tuần', 'HK!', 'PRINCIPAL_APPROVED', 'CN001', '2026-01-19 06:30:04.782589', 1, 11, 9),
-(21, '2026-2027', 'kế hoạch trong 1-13 tuần', 'HK!', 'PUBLISHED', 'CN001', '2026-01-19 06:30:17.610949', 1, 11, 9),
-(22, '2026-2027', 'kế hoạch 1 tháng', 'HK1', 'DRAFT', 'CN002', '2026-01-19 07:00:03.710241', 1, 12, 9),
-(23, '2026-2027', 'kế hoạch 1 tháng', 'HK1', 'PRINCIPAL_APPROVED', 'CN002', '2026-01-19 07:00:35.018759', 1, 12, 9),
-(24, '2026-2027', 'kế hoạch 1 tháng', 'HK1', 'PUBLISHED', 'CN002', '2026-01-19 07:00:46.533501', 1, 12, 9);
+(1, NULL, 'Build web applications', NULL, 'DRAFT', 'Microservices 8521', '2026-03-23 13:24:27.888744', 1, 3, 7),
+(2, NULL, 'Testing modern software', NULL, 'DRAFT', 'Spring Boot 4195', '2026-03-23 13:24:39.363700', 1, 4, 7),
+(3, NULL, 'Testing modern software', NULL, 'DRAFT', 'Web Development 888', '2026-03-23 13:24:54.064802', 1, 5, 7),
+(4, NULL, 'Testing modern software', NULL, 'DRAFT', 'Cloud Computing 6224', '2026-03-23 13:25:00.003137', 1, 6, 7);
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `users`
+-- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
@@ -282,27 +341,50 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `users`
+-- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `active`, `cccd`, `date_of_birth`, `full_name`, `password`, `username`) VALUES
-(1, b'1', '012345676668', '2005-01-01', 'Nguyen Van huy', '$2a$10$HgenvNK8Ykd09NGcU9C6YOWuAZl7R1x/TKPWQlIsFmXHegimdAGuq', '012345676668'),
-(2, b'1', '012345676688', '2004-01-01', 'Nguyen Van dat', '$2a$10$ju/hLXeOMe0vrWWcIhAgnuA0Lreq0RgtKuWtzsrrodAkzUnDHOH1e', '012345676688'),
-(7, b'1', '000000000000', '2000-01-01', 'System Admin', '$2a$10$G8eR5vb4mFWg4kKz52TVYOkToJacLsegIJoBw7pIAlDiBU9s2wdFK', '000000000000'),
-(8, b'1', '012345676699', '2004-01-01', 'le van dat', '$2a$10$8LUMeJlqYBRbsFbqIOfzPO.TGztY4SqBy07fYVZhiqGd51pzWTSYq', '012345676699'),
-(9, b'1', '012345676633', '2004-01-01', 'nguyen van dat', '$2a$10$8Nuw9UfCW/Dx/ZLlN0KNouFEcJ.oyc9/1Fcx1wqjmzD7Nk95a.Dbe', '012345676633'),
-(10, b'1', '112345678901', '1999-08-15', 'Nguyễn Văn A', '$2a$10$0zU6v2be.U5wUlP1DO2/uuJ6LSYWvVjlrmQc2h1W4OHhmJfKPFHSu', '112345678901'),
-(11, b'1', '112345678902', '1985-01-03', 'Trần Văn B', '$2a$10$1d6dtW2St5s0LID88lrvfepJpDOxkWKi4JqF7./4OwR3y.klMMFf2', '112345678902'),
-(12, b'1', '112345678903', '2000-12-20', 'Lê Thị C', '$2a$10$1ZUsjSKyPPOWM1mD65daVej7xto4YRxyMINXawHptPz8mfDXCQlri', '112345678903'),
-(13, b'1', '112345678911', '1999-08-15', 'Nguyễn Văn dat', '$2a$10$Q0/6swEFQbq0NKu8.9SaZOPKU.3YvBs5O0PbXaEH4euQtTeO5EIcK', '112345678911'),
-(14, b'1', '112345678922', '1985-01-03', 'Trần Văn ho', '$2a$10$YX5JztK2PLE6jd8QqF6mrOzzWM2TrD7zi50kJczVwf5.rC62uR8he', '112345678922'),
-(15, b'1', '112345678933', '2000-12-20', 'Lê Thị h', '$2a$10$4KMG.YajhH0sJUrwEC85aOKkPCkEmCBV8OSjMO7JmG4T1U01xMSRe', '112345678933'),
-(16, b'1', '111111111111', '2000-01-01', 'Nguyen Van Teo', '$2a$10$73qHTWd9r5hlTDfBFng0n.NiYHwNlBFA3LMqPdDb7.DVtvncPBB8q', '111111111111');
+(1, b'1', '000000000000', '2000-01-01', 'System Admin', '$2a$10$j3Bv9VjCMuZDTjLUqzFdv.1yX.eZz5SE0rkgIZH0xSn12T/qOM.1C', '000000000000'),
+(2, b'1', '111111111111', '2000-01-01', 'Lecturer User', '$2a$10$SbcOaVNJHNZcZ8J3UuiwOuXw5QXUE0Jcx/Kzuo.ytoGPmbSCnwT16', '111111111111'),
+(3, b'1', '222222222222', '2000-01-01', 'HOD User', '$2a$10$0SpoH3TLbDsWt/8c4Irnr.BsVKugMbujuTS20wldtbDc8HQ4lfotC', '222222222222'),
+(4, b'1', '333333333333', '2000-01-01', 'AA User', '$2a$10$DIFho2ZA6SLMZZV175s2zuBhWe.9B3kN.41oe/uc.l9zK5OceN8TG', '333333333333'),
+(5, b'1', '444444444444', '2000-01-01', 'Student User', '$2a$10$2LcwlpvHaId0ADi4OBSWFOSXrr7xkM4AODKC8XohVGszrKSEt4LFu', '444444444444'),
+(6, b'1', '555555555555', '2000-01-01', 'Principal User', '$2a$10$UI6OoDam7jU.aTxUC1xSD.vUXs8xI6dFRBQ8Jo1TzBYJtE1nmMKCa', '555555555555'),
+(7, b'1', '666666666666', '2000-01-01', 'Lecturer User', '$2a$10$wVCoF5PZ.yjbF6T/KMXV3Onj.Fvs21OAwz9y.qLiiY1TrSpdnl48G', '666666666666'),
+(8, b'1', '223288495819', '2000-01-01', 'Auto User ER76TN', '$2a$10$SlrVfZI7YytahxnOeQYG5eHqw7RKM3GOYF2sBU5g9iprIyBjhPAdm', '223288495819'),
+(9, b'1', '296475442489', '2000-01-01', 'Bulk User 6QN18', '$2a$10$OWGzoUtyvpcPj3MB1IQJVOZmvxmINX5uqDBjDhTT4junZFy9wmub.', '296475442489'),
+(10, b'1', '217798212253', '2000-01-01', 'Bulk User 4JH4GP', '$2a$10$xQaAogIWPHdJ4nNmYrEB6OX3zMx0sd8oO6PtyxU6z8uAyyMo0ZqIe', '217798212253'),
+(11, b'1', '239332805541', '2000-01-01', 'Bulk User 3VLXMG', '$2a$10$1r8yacbBEOc7VkXHAbrBpeSCNbhqmaNsBEWrAgKIlP17YXSrOQGzi', '239332805541'),
+(12, b'1', '831638777678', '2000-01-01', 'Bulk User YNR28P', '$2a$10$G43.XLtgwVcn5.dkWfOp5OzKZo.IVgN1fLFeyMIefw/uaiKc9iVJ2', '831638777678'),
+(13, b'1', '115738933100', '2000-01-01', 'Bulk User 99ROT', '$2a$10$bCaq0BSBNoTqU9k36YVfMO543AWLHjdulrBnOH1p5sinQ1dCDcBXK', '115738933100');
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `user_roles`
+-- Table structure for table `user_profiles`
+--
+
+CREATE TABLE `user_profiles` (
+  `user_id` bigint NOT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `avatar_url` varchar(500) DEFAULT NULL,
+  `bio` varchar(1000) DEFAULT NULL,
+  `email` varchar(120) DEFAULT NULL,
+  `phone` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `user_profiles`
+--
+
+INSERT INTO `user_profiles` (`user_id`, `address`, `avatar_url`, `bio`, `email`, `phone`) VALUES
+(7, 'Ha Noi', '/uploads/avatars/a586c157-b326-426a-b1da-1fd461d8bc6b.jpg', 'Backend Engineer', 'user87@gmail.com', '0975487743');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_roles`
 --
 
 CREATE TABLE `user_roles` (
@@ -311,71 +393,103 @@ CREATE TABLE `user_roles` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `user_roles`
+-- Dumping data for table `user_roles`
 --
 
 INSERT INTO `user_roles` (`user_id`, `role_id`) VALUES
 (1, 1),
 (9, 1),
-(12, 1),
-(13, 1),
-(15, 1),
+(11, 1),
 (2, 2),
 (7, 2),
-(8, 4),
-(11, 5),
-(14, 5),
-(10, 6),
-(16, 7);
+(10, 2),
+(3, 3),
+(8, 3),
+(4, 4),
+(5, 5),
+(6, 6),
+(12, 6),
+(13, 6);
 
 --
--- Chỉ mục cho các bảng đã đổ
+-- Indexes for dumped tables
 --
 
 --
--- Chỉ mục cho bảng `courses`
+-- Indexes for table `clo`
+--
+ALTER TABLE `clo`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uk_clo_syllabus_code` (`syllabus_id`,`code`);
+
+--
+-- Indexes for table `clo_plo_map`
+--
+ALTER TABLE `clo_plo_map`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uk_map_clo_plo` (`clo_id`,`plo_id`),
+  ADD KEY `FKj4y0d9du8557kp41sbvvkxbfh` (`plo_id`);
+
+--
+-- Indexes for table `courses`
 --
 ALTER TABLE `courses`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `UK61og8rbqdd2y28rx2et5fdnxd` (`code`);
 
 --
--- Chỉ mục cho bảng `course_parallel`
+-- Indexes for table `course_parallel`
 --
 ALTER TABLE `course_parallel`
   ADD PRIMARY KEY (`course_id`,`parallel_id`),
   ADD KEY `FKf2k7oqkliid1ccayftxea4dyx` (`parallel_id`);
 
 --
--- Chỉ mục cho bảng `course_prerequisites`
+-- Indexes for table `course_prerequisites`
 --
 ALTER TABLE `course_prerequisites`
   ADD PRIMARY KEY (`course_id`,`prerequisite_id`),
   ADD KEY `FK2w3n61668a1jqt1y4w7we9pn0` (`prerequisite_id`);
 
 --
--- Chỉ mục cho bảng `course_supplementary`
+-- Indexes for table `course_supplementary`
 --
 ALTER TABLE `course_supplementary`
   ADD PRIMARY KEY (`course_id`,`supplementary_id`),
   ADD KEY `FKsfv483l7p3ujvgqw5f6scikg6` (`supplementary_id`);
 
 --
--- Chỉ mục cho bảng `notifications`
+-- Indexes for table `notifications`
 --
 ALTER TABLE `notifications`
   ADD PRIMARY KEY (`id`),
   ADD KEY `FK9y21adhxn0ayjhfocscqox7bh` (`user_id`);
 
 --
--- Chỉ mục cho bảng `roles`
+-- Indexes for table `plo`
+--
+ALTER TABLE `plo`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uk_plo_scope_code` (`scope_key`,`code`);
+
+--
+-- Indexes for table `review_assignments`
+--
+ALTER TABLE `review_assignments`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `UKaj78mgv6icb9hgcx2vbhkgs22` (`syllabus_id`,`reviewer_id`),
+  ADD KEY `FKfw4vcg2ini18ktrf8qlybvo62` (`assigned_by_id`),
+  ADD KEY `FKo8634faa93dgn4hqqjnft918s` (`reviewer_id`);
+
+--
+-- Indexes for table `roles`
 --
 ALTER TABLE `roles`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `UKofx66keruapi6vyqpv6f2or37` (`name`);
 
 --
--- Chỉ mục cho bảng `subscriptions`
+-- Indexes for table `subscriptions`
 --
 ALTER TABLE `subscriptions`
   ADD PRIMARY KEY (`id`),
@@ -383,7 +497,7 @@ ALTER TABLE `subscriptions`
   ADD KEY `FKhro52ohfqfbay9774bev0qinr` (`user_id`);
 
 --
--- Chỉ mục cho bảng `syllabus`
+-- Indexes for table `syllabus`
 --
 ALTER TABLE `syllabus`
   ADD PRIMARY KEY (`id`),
@@ -391,15 +505,23 @@ ALTER TABLE `syllabus`
   ADD KEY `FKbmekouwi699j6ned9gv88g2dr` (`created_by`);
 
 --
--- Chỉ mục cho bảng `syllabus_comments`
+-- Indexes for table `syllabus_comments`
 --
 ALTER TABLE `syllabus_comments`
   ADD PRIMARY KEY (`id`),
+  ADD KEY `FKi8tqt9e3859irn5y87pwn4ir2` (`assignment_id`),
   ADD KEY `FKovpavo53uf1yt1gn9cjdbfqua` (`commenter_id`),
   ADD KEY `FKadjhehm3kde1tqud4ou106mjj` (`syllabus_id`);
 
 --
--- Chỉ mục cho bảng `syllabus_history`
+-- Indexes for table `syllabus_contents`
+--
+ALTER TABLE `syllabus_contents`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `UKsymubfura5dw5lktcedm3k09o` (`syllabus_id`);
+
+--
+-- Indexes for table `syllabus_history`
 --
 ALTER TABLE `syllabus_history`
   ADD PRIMARY KEY (`id`),
@@ -407,7 +529,7 @@ ALTER TABLE `syllabus_history`
   ADD KEY `FKg1osffa1pv89qx13iryjfh0y0` (`updated_by`);
 
 --
--- Chỉ mục cho bảng `users`
+-- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
@@ -415,125 +537,195 @@ ALTER TABLE `users`
   ADD UNIQUE KEY `UKc7y24p0ml4htprpuyyrk712uc` (`cccd`);
 
 --
--- Chỉ mục cho bảng `user_roles`
+-- Indexes for table `user_profiles`
+--
+ALTER TABLE `user_profiles`
+  ADD PRIMARY KEY (`user_id`);
+
+--
+-- Indexes for table `user_roles`
 --
 ALTER TABLE `user_roles`
   ADD PRIMARY KEY (`user_id`,`role_id`),
   ADD KEY `FKh8ciramu9cc9q3qcqiv4ue8a6` (`role_id`);
 
 --
--- AUTO_INCREMENT cho các bảng đã đổ
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT cho bảng `courses`
+-- AUTO_INCREMENT for table `clo`
+--
+ALTER TABLE `clo`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `clo_plo_map`
+--
+ALTER TABLE `clo_plo_map`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `courses`
 --
 ALTER TABLE `courses`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `notifications`
+--
+ALTER TABLE `notifications`
   MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
--- AUTO_INCREMENT cho bảng `notifications`
+-- AUTO_INCREMENT for table `plo`
 --
-ALTER TABLE `notifications`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+ALTER TABLE `plo`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT cho bảng `roles`
+-- AUTO_INCREMENT for table `review_assignments`
+--
+ALTER TABLE `review_assignments`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT cho bảng `subscriptions`
+-- AUTO_INCREMENT for table `subscriptions`
 --
 ALTER TABLE `subscriptions`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT cho bảng `syllabus`
+-- AUTO_INCREMENT for table `syllabus`
 --
 ALTER TABLE `syllabus`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT cho bảng `syllabus_comments`
+-- AUTO_INCREMENT for table `syllabus_comments`
 --
 ALTER TABLE `syllabus_comments`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT cho bảng `syllabus_history`
+-- AUTO_INCREMENT for table `syllabus_contents`
+--
+ALTER TABLE `syllabus_contents`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `syllabus_history`
 --
 ALTER TABLE `syllabus_history`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT cho bảng `users`
+-- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
--- Các ràng buộc cho các bảng đã đổ
+-- Constraints for dumped tables
 --
 
 --
--- Các ràng buộc cho bảng `course_parallel`
+-- Constraints for table `clo`
+--
+ALTER TABLE `clo`
+  ADD CONSTRAINT `FKn6qqmpiw4beps9c2lbqyhjp0l` FOREIGN KEY (`syllabus_id`) REFERENCES `syllabus` (`id`);
+
+--
+-- Constraints for table `clo_plo_map`
+--
+ALTER TABLE `clo_plo_map`
+  ADD CONSTRAINT `FKht0aw1fxm0yr20newn0uihjqr` FOREIGN KEY (`clo_id`) REFERENCES `clo` (`id`),
+  ADD CONSTRAINT `FKj4y0d9du8557kp41sbvvkxbfh` FOREIGN KEY (`plo_id`) REFERENCES `plo` (`id`);
+
+--
+-- Constraints for table `course_parallel`
 --
 ALTER TABLE `course_parallel`
   ADD CONSTRAINT `FKf2k7oqkliid1ccayftxea4dyx` FOREIGN KEY (`parallel_id`) REFERENCES `courses` (`id`),
   ADD CONSTRAINT `FKkjog45mdal3asd9fgmu7ltl6a` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`);
 
 --
--- Các ràng buộc cho bảng `course_prerequisites`
+-- Constraints for table `course_prerequisites`
 --
 ALTER TABLE `course_prerequisites`
   ADD CONSTRAINT `FK2w3n61668a1jqt1y4w7we9pn0` FOREIGN KEY (`prerequisite_id`) REFERENCES `courses` (`id`),
   ADD CONSTRAINT `FKhh4f1avebuvlv54m3j3l3pp36` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`);
 
 --
--- Các ràng buộc cho bảng `course_supplementary`
+-- Constraints for table `course_supplementary`
 --
 ALTER TABLE `course_supplementary`
   ADD CONSTRAINT `FKcc9qvctm2g99ar258b2bou9b` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`),
   ADD CONSTRAINT `FKsfv483l7p3ujvgqw5f6scikg6` FOREIGN KEY (`supplementary_id`) REFERENCES `courses` (`id`);
 
 --
--- Các ràng buộc cho bảng `notifications`
+-- Constraints for table `notifications`
 --
 ALTER TABLE `notifications`
   ADD CONSTRAINT `FK9y21adhxn0ayjhfocscqox7bh` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
--- Các ràng buộc cho bảng `subscriptions`
+-- Constraints for table `review_assignments`
+--
+ALTER TABLE `review_assignments`
+  ADD CONSTRAINT `FKfw4vcg2ini18ktrf8qlybvo62` FOREIGN KEY (`assigned_by_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `FKo8634faa93dgn4hqqjnft918s` FOREIGN KEY (`reviewer_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `FKog1mpubk86a6qiqai6eoajnq2` FOREIGN KEY (`syllabus_id`) REFERENCES `syllabus` (`id`);
+
+--
+-- Constraints for table `subscriptions`
 --
 ALTER TABLE `subscriptions`
   ADD CONSTRAINT `FK9f5yugfr9ro4r0x5ltfr2pb0f` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`),
   ADD CONSTRAINT `FKhro52ohfqfbay9774bev0qinr` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
--- Các ràng buộc cho bảng `syllabus`
+-- Constraints for table `syllabus`
 --
 ALTER TABLE `syllabus`
   ADD CONSTRAINT `FKbmekouwi699j6ned9gv88g2dr` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `FKjvcn63hkhub569g084rgb9hme` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`);
 
 --
--- Các ràng buộc cho bảng `syllabus_comments`
+-- Constraints for table `syllabus_comments`
 --
 ALTER TABLE `syllabus_comments`
   ADD CONSTRAINT `FKadjhehm3kde1tqud4ou106mjj` FOREIGN KEY (`syllabus_id`) REFERENCES `syllabus` (`id`),
+  ADD CONSTRAINT `FKi8tqt9e3859irn5y87pwn4ir2` FOREIGN KEY (`assignment_id`) REFERENCES `review_assignments` (`id`),
   ADD CONSTRAINT `FKovpavo53uf1yt1gn9cjdbfqua` FOREIGN KEY (`commenter_id`) REFERENCES `users` (`id`);
 
 --
--- Các ràng buộc cho bảng `syllabus_history`
+-- Constraints for table `syllabus_contents`
+--
+ALTER TABLE `syllabus_contents`
+  ADD CONSTRAINT `FK2ou40so8rllw681eo9m3jb97v` FOREIGN KEY (`syllabus_id`) REFERENCES `syllabus` (`id`);
+
+--
+-- Constraints for table `syllabus_history`
 --
 ALTER TABLE `syllabus_history`
   ADD CONSTRAINT `FK83n0ovsleh1tt5mcpplo42w7g` FOREIGN KEY (`syllabus_id`) REFERENCES `syllabus` (`id`),
   ADD CONSTRAINT `FKg1osffa1pv89qx13iryjfh0y0` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`);
 
 --
--- Các ràng buộc cho bảng `user_roles`
+-- Constraints for table `user_profiles`
+--
+ALTER TABLE `user_profiles`
+  ADD CONSTRAINT `FKjcad5nfve11khsnpwj1mv8frj` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `user_roles`
 --
 ALTER TABLE `user_roles`
   ADD CONSTRAINT `FKh8ciramu9cc9q3qcqiv4ue8a6` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`),

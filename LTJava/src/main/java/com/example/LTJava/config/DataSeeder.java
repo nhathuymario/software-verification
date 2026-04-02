@@ -32,6 +32,7 @@ public class DataSeeder {
 
             seedUser(userRepo, encoder, systemAdmin, "000000000000", "System Admin");
             seedUser(userRepo, encoder, lecturer, "111111111111", "Lecturer User");
+            seedUser(userRepo, encoder, lecturer, "666666666666", "Lecturer User");
             seedUser(userRepo, encoder, hod, "222222222222", "HOD User");
             seedUser(userRepo, encoder, aa, "333333333333", "AA User");
             seedUser(userRepo, encoder, student, "444444444444", "Student User");

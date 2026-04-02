@@ -1,12 +1,22 @@
 package com.example.LTJava.outcome.controller;
 
-import com.example.LTJava.outcome.dto.*;
-import com.example.LTJava.outcome.service.PloService;
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.example.LTJava.outcome.dto.PloDto;
+import com.example.LTJava.outcome.dto.PloUpsertReq;
+import com.example.LTJava.outcome.service.PloService;
 
 @RestController
 @RequestMapping("/api/aa/plos")
@@ -24,8 +34,6 @@ public class AaPloController {
         return ResponseEntity.ok(ploService.listAll(scopeKey));
     }
 
-
-
     @PostMapping
     public ResponseEntity<PloDto> create(@RequestBody PloUpsertReq req) {
         return ResponseEntity.ok(ploService.create(req));
@@ -41,7 +49,6 @@ public class AaPloController {
         ploService.hardDelete(id);
         return ResponseEntity.noContent().build();
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {

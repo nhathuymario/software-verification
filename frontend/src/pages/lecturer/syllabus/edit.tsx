@@ -48,7 +48,6 @@ export default function LecturerSyllabusEditPage() {
             selfStudy: "",
             prerequisiteId: "",
             corequisiteId: "",
-            parallerId: "",
             courseType: "Bắt buộc",
             component: "",
         },
@@ -126,7 +125,7 @@ export default function LecturerSyllabusEditPage() {
                                 selfStudy: loadedGeneralInfo.selfStudy ?? prev.generalInfo.selfStudy,
                                 prerequisiteId: loadedGeneralInfo.prerequisiteId ?? prev.generalInfo.prerequisiteId,
                                 corequisiteId: loadedGeneralInfo.corequisiteId ?? prev.generalInfo.corequisiteId,
-                                parallerId: loadedGeneralInfo.parallerId ?? prev.generalInfo.parallerId,
+
                                 courseType: loadedGeneralInfo.courseType ?? prev.generalInfo.courseType,
                                 component: loadedGeneralInfo.component ?? prev.generalInfo.component,
                                 scopeKey: loadedGeneralInfo.scopeKey ?? prev.generalInfo.scopeKey,

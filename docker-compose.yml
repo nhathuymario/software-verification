@@ -3,7 +3,7 @@ services:
     image: mysql:8.0
     container_name: ltjava-mysql
     environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-LTJava}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-LTJavaTest}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-123456}
       TZ: UTC
     ports:
@@ -71,6 +71,37 @@ services:
     depends_on:
       - backend
 
+  sonarqube:
+    image: sonarqube:community
+    container_name: ltjava-sonarqube
+    depends_on:
+      - sonar-db
+    environment:
+      SONAR_JDBC_URL: jdbc:postgresql://sonar-db:5432/sonar
+      SONAR_JDBC_USERNAME: sonar
+      SONAR_JDBC_PASSWORD: sonar
+    ports:
+      - "9000:9000"
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_logs:/opt/sonarqube/logs
+      - sonarqube_extensions:/opt/sonarqube/extensions
+
+  sonar-db:
+    image: postgres:15
+    container_name: ltjava-sonar-db
+    environment:
+      POSTGRES_USER: sonar
+      POSTGRES_PASSWORD: sonar
+      POSTGRES_DB: sonar
+    volumes:
+      - sonar_db_data:/var/lib/postgresql/data
+
+
 volumes:
   mysql_data:
   redis_data:
+  sonarqube_data:
+  sonarqube_logs:
+  sonarqube_extensions:
+  sonar_db_data:
