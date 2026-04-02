@@ -2,7 +2,13 @@ package com.example.LTJava.syllabus.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.LTJava.syllabus.dto.CreateSyllabusRequest;
 import com.example.LTJava.syllabus.dto.HodCourseGroupResponse;
@@ -14,16 +20,15 @@ import com.example.LTJava.syllabus.entity.Syllabus;
 import com.example.LTJava.syllabus.entity.SyllabusHistory;
 import com.example.LTJava.syllabus.entity.SyllabusStatus;
 import com.example.LTJava.syllabus.exception.ResourceNotFoundException;
-import com.example.LTJava.syllabus.repository.*;
+import com.example.LTJava.syllabus.repository.CourseRepository;
+import com.example.LTJava.syllabus.repository.NotificationRepository;
+import com.example.LTJava.syllabus.repository.SubscriptionRepository;
+import com.example.LTJava.syllabus.repository.SyllabusContentRepository;
+import com.example.LTJava.syllabus.repository.SyllabusHistoryRepository;
+import com.example.LTJava.syllabus.repository.SyllabusRepository;
 import com.example.LTJava.user.entity.User;
 import com.example.LTJava.user.repository.UserRepository;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class SyllabusServiceImpl implements SyllabusService {
@@ -119,10 +124,10 @@ public class SyllabusServiceImpl implements SyllabusService {
 
         Syllabus syllabus = syllabusRepository
                 .findByIdAndCreatedBy_Id(syllabusId, lecturerId)
-                .orElseThrow(() -> new RuntimeException("Syllabus không tồn tại hoặc không thuộc quyền của bạn"));
+                .orElseThrow(() -> new IllegalArgumentException("Syllabus không tồn tại hoặc không thuộc quyền của bạn"));
 
         if (syllabus.getStatus() != SyllabusStatus.DRAFT) {
-            throw new RuntimeException("Chỉ syllabus ở trạng thái DRAFT mới được chỉnh sửa");
+            throw new IllegalArgumentException("Chỉ syllabus ở trạng thái DRAFT mới được chỉnh sửa");
         }
 
         syllabus.setTitle(request.getTitle());
@@ -162,11 +167,11 @@ public class SyllabusServiceImpl implements SyllabusService {
     @Override
     public void deleteSyllabus(Long syllabusId, Long lecturerId) {
         Syllabus syllabus = syllabusRepository.findByIdAndCreatedBy_Id(syllabusId, lecturerId)
-                .orElseThrow(() -> new RuntimeException("Syllabus không tồn tại hoặc không thuộc quyền của bạn"));
+                .orElseThrow(() -> new IllegalArgumentException("Syllabus không tồn tại hoặc không thuộc quyền của bạn"));
 
         // ✅ chỉ cho xóa khi DRAFT
         if (syllabus.getStatus() != SyllabusStatus.DRAFT) {
-            throw new RuntimeException("Chỉ syllabus ở trạng thái DRAFT mới được xóa");
+            throw new IllegalArgumentException("Chỉ syllabus ở trạng thái DRAFT mới được xóa");
         }
 
         // 1) xóa content trước
@@ -180,10 +185,10 @@ public class SyllabusServiceImpl implements SyllabusService {
     @Override
     public Syllabus submitSyllabus(Long syllabusId, Long lecturerId) {
         Syllabus syllabus = syllabusRepository.findByIdAndCreatedBy_Id(syllabusId, lecturerId)
-                .orElseThrow(() -> new RuntimeException("Syllabus không tồn tại hoặc không thuộc quyền của bạn"));
+                .orElseThrow(() -> new IllegalArgumentException("Syllabus không tồn tại hoặc không thuộc quyền của bạn"));
 
         if (syllabus.getStatus() != SyllabusStatus.DRAFT) {
-            throw new RuntimeException("Chỉ syllabus ở trạng thái DRAFT mới được submit");
+            throw new IllegalArgumentException("Chỉ syllabus ở trạng thái DRAFT mới được submit");
         }
 
         saveHistory(syllabus);
@@ -208,11 +213,11 @@ public class SyllabusServiceImpl implements SyllabusService {
     @Override
     public Syllabus resubmitSyllabus(Long syllabusId, Long lecturerId) {
         Syllabus syllabus = syllabusRepository.findByIdAndCreatedBy_Id(syllabusId, lecturerId)
-                .orElseThrow(() -> new RuntimeException("Syllabus không tồn tại hoặc không thuộc quyền của bạn"));
+                .orElseThrow(() -> new IllegalArgumentException("Syllabus không tồn tại hoặc không thuộc quyền của bạn"));
 
         if (syllabus.getStatus() != SyllabusStatus.REQUESTEDIT
                 && syllabus.getStatus() != SyllabusStatus.REJECTED) {
-            throw new RuntimeException("Chỉ syllabus REQUESTEDIT hoặc REJECTED mới được resubmit");
+            throw new IllegalArgumentException("Chỉ syllabus REQUESTEDIT hoặc REJECTED mới được resubmit");
         }
 
         syllabus.setStatus(SyllabusStatus.SUBMITTED);
@@ -238,10 +243,10 @@ public class SyllabusServiceImpl implements SyllabusService {
     @Override
     public Syllabus moveToDraftForEdit(Long syllabusId, Long lecturerId) {
         Syllabus syllabus = syllabusRepository.findByIdAndCreatedBy_Id(syllabusId, lecturerId)
-                .orElseThrow(() -> new RuntimeException("Syllabus không tồn tại hoặc không thuộc quyền của bạn"));
+                .orElseThrow(() -> new IllegalArgumentException("Syllabus không tồn tại hoặc không thuộc quyền của bạn"));
 
         if (syllabus.getStatus() != SyllabusStatus.REQUESTEDIT) {
-            throw new RuntimeException("Chỉ syllabus REQUESTEDIT mới được chuyển về DRAFT để chỉnh sửa");
+            throw new IllegalArgumentException("Chỉ syllabus REQUESTEDIT mới được chuyển về DRAFT để chỉnh sửa");
         }
 
         syllabus.setStatus(SyllabusStatus.DRAFT);
@@ -251,10 +256,10 @@ public class SyllabusServiceImpl implements SyllabusService {
     @Override
     public Syllabus createNewVersion(Long syllabusId, Long lecturerId) {
         Syllabus syllabus = syllabusRepository.findByIdAndCreatedBy_Id(syllabusId, lecturerId)
-                .orElseThrow(() -> new RuntimeException("Syllabus không tồn tại hoặc không thuộc quyền của bạn"));
+                .orElseThrow(() -> new IllegalArgumentException("Syllabus không tồn tại hoặc không thuộc quyền của bạn"));
 
         if (syllabus.getStatus() != SyllabusStatus.PUBLISHED) {
-            throw new RuntimeException("Chỉ syllabus ở trạng thái PUBLISHED mới được tạo version mới");
+            throw new IllegalArgumentException("Chỉ syllabus ở trạng thái PUBLISHED mới được tạo version mới");
         }
 
         saveHistory(syllabus);
@@ -286,7 +291,7 @@ public class SyllabusServiceImpl implements SyllabusService {
     @Override
     public Syllabus getById(Long id) {
         return syllabusRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Syllabus không tồn tại"));
+                .orElseThrow(() -> new ResourceNotFoundException("Syllabus không tồn tại"));
     }
 
     @Override
@@ -322,10 +327,10 @@ public class SyllabusServiceImpl implements SyllabusService {
     @Override
     public Syllabus approveByHod(Long syllabusId, Long hodId) {
         Syllabus syllabus = syllabusRepository.findById(syllabusId)
-                .orElseThrow(() -> new RuntimeException("Syllabus không tồn tại"));
+                .orElseThrow(() -> new ResourceNotFoundException("Syllabus không tồn tại"));
 
         if (syllabus.getStatus() != SyllabusStatus.SUBMITTED) {
-            throw new RuntimeException("Chỉ syllabus SUBMITTED mới được HoD duyệt");
+            throw new IllegalArgumentException("Chỉ syllabus SUBMITTED mới được HoD duyệt");
         }
 
         syllabus.setStatus(SyllabusStatus.HOD_APPROVED);
@@ -361,14 +366,14 @@ public class SyllabusServiceImpl implements SyllabusService {
     @Override
     public Syllabus requestEditByHod(Long syllabusId, Long hodId, String editNote) {
         Syllabus syllabus = syllabusRepository.findById(syllabusId)
-                .orElseThrow(() -> new RuntimeException("Syllabus không tồn tại"));
+                .orElseThrow(() -> new ResourceNotFoundException("Syllabus không tồn tại"));
 
         if (syllabus.getStatus() != SyllabusStatus.SUBMITTED) {
-            throw new RuntimeException("Chỉ syllabus SUBMITTED mới được yêu cầu chỉnh sửa");
+            throw new IllegalArgumentException("Chỉ syllabus SUBMITTED mới được yêu cầu chỉnh sửa");
         }
 
         if (editNote == null || editNote.trim().isEmpty()) {
-            throw new RuntimeException("Nội dung yêu cầu chỉnh sửa không được để trống");
+            throw new IllegalArgumentException("Nội dung yêu cầu chỉnh sửa không được để trống");
         }
 
         syllabus.setStatus(SyllabusStatus.REQUESTEDIT);
@@ -392,10 +397,10 @@ public class SyllabusServiceImpl implements SyllabusService {
     @Override
     public Syllabus rejectByHod(Long syllabusId, Long hodId, String reason) {
         Syllabus syllabus = syllabusRepository.findById(syllabusId)
-                .orElseThrow(() -> new RuntimeException("Syllabus không tồn tại"));
+                .orElseThrow(() -> new ResourceNotFoundException("Syllabus không tồn tại"));
 
         if (syllabus.getStatus() != SyllabusStatus.SUBMITTED) {
-            throw new RuntimeException("Chỉ syllabus SUBMITTED mới được HoD từ chối");
+            throw new IllegalArgumentException("Chỉ syllabus SUBMITTED mới được HoD từ chối");
         }
 
         syllabus.setStatus(SyllabusStatus.REJECTED);
@@ -476,10 +481,10 @@ public class SyllabusServiceImpl implements SyllabusService {
     @Override
     public Syllabus approveByAa(Long syllabusId, Long aaId) {
         Syllabus syllabus = syllabusRepository.findById(syllabusId)
-                .orElseThrow(() -> new RuntimeException("Syllabus không tồn tại"));
+                .orElseThrow(() -> new ResourceNotFoundException("Syllabus không tồn tại"));
 
         if (syllabus.getStatus() != SyllabusStatus.HOD_APPROVED) {
-            throw new RuntimeException("Chỉ syllabus HOD_APPROVED mới được AA duyệt");
+            throw new IllegalArgumentException("Chỉ syllabus HOD_APPROVED mới được AA duyệt");
         }
 
         syllabus.setStatus(SyllabusStatus.AA_APPROVED);
@@ -515,11 +520,11 @@ public class SyllabusServiceImpl implements SyllabusService {
     @Override
     public Syllabus rejectByAa(Long syllabusId, Long aaId, String reason) {
         Syllabus syllabus = syllabusRepository.findById(syllabusId)
-                .orElseThrow(() -> new RuntimeException("Syllabus không tồn tại"));
+                .orElseThrow(() -> new ResourceNotFoundException("Syllabus không tồn tại"));
 
         if (syllabus.getStatus() != SyllabusStatus.HOD_APPROVED
                 && syllabus.getStatus() != SyllabusStatus.AA_APPROVED) {
-            throw new RuntimeException("Chỉ syllabus HOD_APPROVED hoặc AA_APPROVED mới được AA từ chối");
+            throw new IllegalArgumentException("Chỉ syllabus HOD_APPROVED hoặc AA_APPROVED mới được AA từ chối");
         }
 
         syllabus.setStatus(SyllabusStatus.REJECTED);
@@ -547,10 +552,10 @@ public class SyllabusServiceImpl implements SyllabusService {
     @Override
     public Syllabus approveByPrincipal(Long syllabusId, Long principalId) {
         Syllabus syllabus = syllabusRepository.findById(syllabusId)
-                .orElseThrow(() -> new RuntimeException("Syllabus không tồn tại"));
+                .orElseThrow(() -> new ResourceNotFoundException("Syllabus không tồn tại"));
 
         if (syllabus.getStatus() != SyllabusStatus.AA_APPROVED) {
-            throw new RuntimeException("Chỉ syllabus AA_APPROVED mới được Principal duyệt");
+            throw new IllegalArgumentException("Chỉ syllabus AA_APPROVED mới được Principal duyệt");
         }
 
         syllabus.setStatus(SyllabusStatus.PRINCIPAL_APPROVED);
@@ -575,11 +580,11 @@ public class SyllabusServiceImpl implements SyllabusService {
     @Override
     public Syllabus rejectByPrincipal(Long syllabusId, Long principalId, String reason) {
         Syllabus syllabus = syllabusRepository.findById(syllabusId)
-                .orElseThrow(() -> new RuntimeException("Syllabus không tồn tại"));
+                .orElseThrow(() -> new ResourceNotFoundException("Syllabus không tồn tại"));
 
         if (syllabus.getStatus() != SyllabusStatus.AA_APPROVED
                 && syllabus.getStatus() != SyllabusStatus.PRINCIPAL_APPROVED) {
-            throw new RuntimeException("Chỉ syllabus AA_APPROVED hoặc PRINCIPAL_APPROVED mới được Principal reject");
+            throw new IllegalArgumentException("Chỉ syllabus AA_APPROVED hoặc PRINCIPAL_APPROVED mới được Principal reject");
         }
 
         syllabus.setStatus(SyllabusStatus.REJECTED);
@@ -611,7 +616,7 @@ public class SyllabusServiceImpl implements SyllabusService {
                 .orElseThrow(() -> new ResourceNotFoundException("Syllabus not found"));
 
         if (syllabus.getStatus() != SyllabusStatus.PRINCIPAL_APPROVED) {
-            throw new RuntimeException("Chỉ syllabus PRINCIPAL_APPROVED mới được publish");
+            throw new IllegalArgumentException("Chỉ syllabus PRINCIPAL_APPROVED mới được publish");
         }
 
         syllabus.setStatus(SyllabusStatus.PUBLISHED);
@@ -746,7 +751,7 @@ public class SyllabusServiceImpl implements SyllabusService {
     public List<String> compareVersions(Long syllabusId, Long historyId) {
         Syllabus current = syllabusRepository.findById(syllabusId).orElseThrow();
         SyllabusHistory old = historyRepository.findById(historyId)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy bản lịch sử"));
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy bản lịch sử"));
 
         List<String> changes = new ArrayList<>();
 
@@ -846,10 +851,10 @@ public class SyllabusServiceImpl implements SyllabusService {
     @CacheEvict(cacheNames = "unreadCount", key = "#userId")
     public void markNotificationRead(Long userId, Long notificationId) {
         Notification n = notiRepo.findById(notificationId)
-                .orElseThrow(() -> new RuntimeException("Notification không tồn tại"));
+                .orElseThrow(() -> new ResourceNotFoundException("Notification không tồn tại"));
 
         if (!n.getUser().getId().equals(userId)) {
-            throw new RuntimeException("Bạn không có quyền");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Bạn không có quyền");
         }
 
         if (!n.isRead()) {

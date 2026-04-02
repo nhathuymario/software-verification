@@ -1,19 +1,18 @@
 package com.example.LTJava.course.service;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.example.LTJava.course.dto.AssignLecturerRequest;
 import com.example.LTJava.course.dto.CreateCourseRequest;
 import com.example.LTJava.course.entity.Course1;
 import com.example.LTJava.course.repository.CourseRepository1;
-import com.example.LTJava.syllabus.entity.Course;
+import com.example.LTJava.syllabus.exception.ResourceNotFoundException;
 import com.example.LTJava.user.entity.User;
 import com.example.LTJava.user.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
 
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -31,18 +30,18 @@ public class CourseServiceImpl implements CourseService {
     public Course1 create(CreateCourseRequest req) {
 
         if (req.getCode() == null || req.getCode().isBlank()) {
-            throw new RuntimeException("Course code không được để trống");
+            throw new IllegalArgumentException("Course code không được để trống");
         }
         if (req.getName() == null || req.getName().isBlank()) {
-            throw new RuntimeException("Course name không được để trống");
+            throw new IllegalArgumentException("Course name không được để trống");
         }
 
         // ✅ NEW validate academicYear / semester
         if (req.getAcademicYear() == null || req.getAcademicYear().isBlank()) {
-            throw new RuntimeException("Năm học (academicYear) không được để trống");
+            throw new IllegalArgumentException("Năm học (academicYear) không được để trống");
         }
         if (req.getSemester() == null || req.getSemester().isBlank()) {
-            throw new RuntimeException("Học kỳ (semester) không được để trống");
+            throw new IllegalArgumentException("Học kỳ (semester) không được để trống");
         }
 
         String academicYear = req.getAcademicYear().trim();
@@ -50,23 +49,23 @@ public class CourseServiceImpl implements CourseService {
 
         String code = req.getCode().trim();
         if (courseRepository.existsByCode(code)) {
-            throw new RuntimeException("Course code đã tồn tại");
+            throw new ResourceNotFoundException("Course code đã tồn tại");
         }
 
         if (req.getLecturerUsername() == null || req.getLecturerUsername().isBlank()) {
-            throw new RuntimeException("lecturerUsername không được để trống");
+            throw new IllegalArgumentException("lecturerUsername không được để trống");
         }
         String lecturerUsername = req.getLecturerUsername().trim();
 
         // ✅ lookup user theo username (username DB của bạn = CCCD)
         User lecturer = userRepository.findByUsername(lecturerUsername)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy giảng viên: " + lecturerUsername));
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy giảng viên: " + lecturerUsername));
 
         // ✅ check role LECTURER
         boolean isLecturer = lecturer.getRoles().stream()
                 .anyMatch(r -> "LECTURER".equalsIgnoreCase(r.getName()));
         if (!isLecturer) {
-            throw new RuntimeException("User này không có role LECTURER");
+            throw new ResourceNotFoundException("User này không có role LECTURER");
         }
 
         Course1 c = new Course1();
@@ -123,7 +122,7 @@ public class CourseServiceImpl implements CourseService {
     @Transactional
     public void delete(Long id) {
         Course1 course = courseRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Not found"));
 
         // gỡ course này khỏi danh sách prerequisite của các course khác
         courseRepository.removeFromAllPrerequisites(id);
@@ -138,10 +137,10 @@ public class CourseServiceImpl implements CourseService {
         Course1 c = getById(courseId);
 
         if (req.getLecturerId() == null) {
-            throw new RuntimeException("lecturerId không được để trống");
+            throw new ResourceNotFoundException("lecturerId không được để trống");
         }
         if (req.getLecturerUsername() == null || req.getLecturerUsername().isBlank()) {
-            throw new RuntimeException("lecturerUsername không được để trống");
+            throw new IllegalArgumentException("lecturerUsername không được để trống");
         }
 
         c.setLecturerId(req.getLecturerId());
@@ -158,13 +157,13 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public Course1 getById(Long id) {
         return courseRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Course không tồn tại"));
+                .orElseThrow(() -> new ResourceNotFoundException("Course không tồn tại"));
     }
 
     @Override
     public List<Course1> getMyCourses(Long lecturerId) {
         if (lecturerId == null) {
-            throw new RuntimeException("lecturerId không hợp lệ");
+            throw new IllegalArgumentException("lecturerId không hợp lệ");
         }
         return courseRepository.findByLecturerId(lecturerId);
     }
@@ -172,7 +171,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<Course1> getByLecturerUsername(String username) {
         if (username == null || username.isBlank()) {
-            throw new RuntimeException("username không hợp lệ");
+            throw new IllegalArgumentException("username không hợp lệ");
         }
         return courseRepository.findByLecturerUsername(username.trim());
     }
