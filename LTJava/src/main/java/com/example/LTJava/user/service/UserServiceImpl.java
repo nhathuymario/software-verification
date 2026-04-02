@@ -5,6 +5,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
+import com.example.LTJava.user.exception.AppException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -129,25 +131,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User lockUser(Long userId) {
-        // 1. Tìm user cần khóa
+        // 1. Tìm user - Nếu không thấy trả về 404 Not Found
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy user id = " + userId));
+                .orElseThrow(() -> new AppException("Không tìm thấy user id = " + userId, HttpStatus.NOT_FOUND));
 
-        // 2. BVA & Security: Kiểm tra xem có phải đang tự khóa chính mình không
-        // Lấy username của Admin đang thao tác từ Spring Security
-        String currentAdminUsername = org.springframework.security.core.context.SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getName();
-
+        // 2. BVA & Security: Kiểm tra tự khóa chính mình - Trả về 400 Bad Request
+        String currentAdminUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         if (user.getUsername().equals(currentAdminUsername)) {
-            throw new RuntimeException("Bạn không thể tự khóa tài khoản của chính mình!");
+            throw new AppException("Bạn không thể tự khóa tài khoản của chính mình!", HttpStatus.BAD_REQUEST);
         }
 
-        // 3. BVA: Kiểm tra trạng thái biên (Nếu đã khóa rồi thì không khóa nữa)
+        // 3. BVA: Kiểm tra trạng thái biên (Đã khóa rồi) - Trả về 409 Conflict
         if (!user.isActive()) {
-            throw new RuntimeException("Người dùng này hiện đang bị khóa rồi.");
+            throw new AppException("Người dùng này hiện đang bị khóa rồi.", HttpStatus.CONFLICT);
         }
 
         // 4. Thực hiện khóa
@@ -156,13 +154,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User unlockUser(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy user id = " + userId));
+                .orElseThrow(() -> new AppException("Không tìm thấy user id = " + userId, HttpStatus.NOT_FOUND));
 
-        // BVA: Nếu đã active (true) thì không cho mở khóa nữa
+        // BVA: Nếu đã active rồi thì không cho mở khóa nữa - Trả về 400 hoặc 409
         if (user.isActive()) {
-            throw new RuntimeException("Người dùng này hiện đang hoạt động, không cần mở khóa.");
+            throw new AppException("Người dùng này hiện đang hoạt động, không cần mở khóa.", HttpStatus.BAD_REQUEST);
         }
 
         user.setActive(true);
@@ -170,48 +169,46 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User changeUserRole(Long userId, String roleName) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy user id = " + userId));
+                .orElseThrow(() -> new AppException("Không tìm thấy user id = " + userId, HttpStatus.NOT_FOUND));
 
         if (roleName == null || roleName.isBlank()) {
-            throw new IllegalArgumentException("Role name không được để trống");
+            throw new AppException("Role name không được để trống", HttpStatus.BAD_REQUEST);
         }
 
-        // BVA: Kiểm tra xem user đã có role này chưa để tránh update thừa
+        // BVA: Kiểm tra xem user đã có role này chưa
         boolean alreadyHasRole = user.getRoles().stream()
                 .anyMatch(r -> r.getName().equalsIgnoreCase(roleName));
+
         if (alreadyHasRole) {
-            throw new RuntimeException("Người dùng đã sở hữu quyền " + roleName + " rồi.");
+            throw new AppException("Người dùng đã sở hữu quyền " + roleName + " rồi.", HttpStatus.CONFLICT);
         }
 
+        // Tìm Role trong DB
         Role role = roleRepository.findByName(roleName)
-                .orElseThrow(() -> new RuntimeException("Role " + roleName + " không tồn tại trong hệ thống"));
+                .orElseThrow(() -> new AppException("Role " + roleName + " không tồn tại", HttpStatus.NOT_FOUND));
 
         user.getRoles().clear();
         user.getRoles().add(role);
 
         return userRepository.save(user);
     }
-    // xóa user
+
     @Override
     @Transactional
     public void deleteUser(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy user id = " + userId));
+                .orElseThrow(() -> new AppException("Không tìm thấy user id = " + userId, HttpStatus.NOT_FOUND));
 
         // BVA & Security: Không cho phép Admin tự xóa chính mình
-        // Giả sử bạn lấy username của người đang đăng nhập từ SecurityContext
-        String currentUsername = org.springframework.security.core.context.SecurityContextHolder
-                .getContext().getAuthentication().getName();
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         if (user.getUsername().equals(currentUsername)) {
-            throw new RuntimeException("Bạn không thể tự xóa tài khoản của chính mình!");
+            throw new AppException("Bạn không thể tự xóa tài khoản của chính mình!", HttpStatus.BAD_REQUEST);
         }
 
-        // BVA: Kiểm tra nếu là Admin cuối cùng (Tùy nghiệp vụ)
-        // long adminCount = userRepository.countByRoleName("ADMIN");
-        // if (adminCount <= 1 && user.isAdmin()) { ... }
-
+        // Xóa dữ liệu liên quan trước khi xóa User
         notificationRepository.deleteByUserId(userId);
         userRepository.deleteById(userId);
     }
