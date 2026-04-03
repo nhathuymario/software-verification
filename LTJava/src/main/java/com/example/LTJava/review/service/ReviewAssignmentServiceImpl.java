@@ -7,6 +7,8 @@ import java.util.List;
 import com.example.LTJava.syllabus.entity.Notification;
 import com.example.LTJava.syllabus.repository.NotificationRepository;
 import com.example.LTJava.syllabus.service.AIService;
+import com.example.LTJava.user.exception.AppException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +31,6 @@ public class ReviewAssignmentServiceImpl implements ReviewAssignmentService {
     private final NotificationRepository notificationRepository;
     private final AIService aiService;
 
-
     public ReviewAssignmentServiceImpl(
             ReviewAssignmentRepository repo,
             SyllabusRepository syllabusRepository,
@@ -44,6 +45,14 @@ public class ReviewAssignmentServiceImpl implements ReviewAssignmentService {
         this.aiService = aiService;
     }
 
+    // 1. Triển khai listForSyllabus (Cái bạn đang bị báo lỗi)
+    @Override
+    @Transactional(readOnly = true)
+    public List<ReviewAssignment> listForSyllabus(Long syllabusId) {
+        return repo.findBySyllabus_IdOrderByCreatedAtDesc(syllabusId);
+    }
+
+    // 2. Triển khai assignByUsernames với AppException
     @Override
     public List<ReviewAssignment> assignByUsernames(
             Long hodId,
@@ -52,114 +61,61 @@ public class ReviewAssignmentServiceImpl implements ReviewAssignmentService {
             LocalDateTime dueAt
     ) {
         if (reviewerUsernames == null || reviewerUsernames.isEmpty()) {
-            throw new RuntimeException("Thiếu reviewerUsernames");
+            throw new AppException("Danh sách người đánh giá không được trống", HttpStatus.BAD_REQUEST);
         }
         if (dueAt == null || !dueAt.isAfter(LocalDateTime.now())) {
-            throw new RuntimeException("dueAt phải lớn hơn hiện tại");
+            throw new AppException("Hạn chót phải lớn hơn thời gian hiện tại", HttpStatus.BAD_REQUEST);
         }
 
         Syllabus syllabus = syllabusRepository.findById(syllabusId)
-                .orElseThrow(() -> new RuntimeException("Syllabus không tồn tại"));
+                .orElseThrow(() -> new AppException("Syllabus không tồn tại", HttpStatus.NOT_FOUND));
 
         if (syllabus.getStatus() != SyllabusStatus.DRAFT) {
-            throw new RuntimeException("Chỉ assign review khi syllabus ở trạng thái DRAFT");
+            throw new AppException("Chỉ có thể phân công khi Syllabus ở trạng thái DRAFT", HttpStatus.BAD_REQUEST);
         }
 
         User hod = userRepository.findById(hodId)
-                .orElseThrow(() -> new RuntimeException("HOD không tồn tại"));
+                .orElseThrow(() -> new AppException("HOD không tồn tại", HttpStatus.NOT_FOUND));
 
         List<ReviewAssignment> created = new ArrayList<>();
-
         for (String raw : reviewerUsernames) {
-            if (raw == null) continue;
+            if (raw == null || raw.trim().isEmpty()) continue;
             String username = raw.trim();
-            if (username.isEmpty()) continue;
 
             User reviewer = userRepository.findByUsername(username)
-                    .orElseThrow(() -> new RuntimeException(
-                            "Reviewer không tồn tại (username/cccd): " + username
-                    ));
+                    .orElseThrow(() -> new AppException("Reviewer " + username + " không tồn tại", HttpStatus.NOT_FOUND));
 
-            // 1) Nếu đã có assignment cho (syllabus, reviewer) thì xử lý theo status
             var existingOpt = repo.findBySyllabus_IdAndReviewer_Id(syllabusId, reviewer.getId());
 
+            ReviewAssignment assignment;
             if (existingOpt.isPresent()) {
-                ReviewAssignment existing = existingOpt.get();
-
-                // chặn nếu đang active
-                if (existing.getStatus() == ReviewStatus.ASSIGNED || existing.getStatus() == ReviewStatus.IN_REVIEW) {
-                    continue;
+                assignment = existingOpt.get();
+                if (assignment.getStatus() == ReviewStatus.ASSIGNED || assignment.getStatus() == ReviewStatus.IN_REVIEW) {
+                    continue; // Đang làm rồi thì bỏ qua
                 }
-
-                // DONE/CANCELLED -> "re-open" để review lại
-                existing.setAssignedBy(hod);
-                existing.setDueAt(dueAt);
-                existing.setStatus(ReviewStatus.ASSIGNED);
-                existing.setStartedAt(null);
-                existing.setCompletedAt(null);
-
-                ReviewAssignment saved = repo.save(existing);
-                created.add(saved);
-
-                String msgToReviewer = aiService.createRoleNotificationMessage(
-                        "REVIEWER",
-                        "Bạn được phân công review syllabus (lần tiếp theo)",
-                        syllabus.getCourse().getName(),
-                        syllabus.getTitle(),
-                        syllabus.getVersion(),
-                        "Deadline: " + dueAt,
-                        syllabus.getId()
-                );
-
-                Notification n = new Notification();
-                n.setUser(reviewer);
-                n.setMessage(msgToReviewer);
-                n.setRead(false);
-                n.setCreatedAt(LocalDateTime.now());
-                notificationRepository.save(n);
-
-                continue;
+                // Reset để làm lại
+                assignment.setAssignedBy(hod);
+                assignment.setDueAt(dueAt);
+                assignment.setStatus(ReviewStatus.ASSIGNED);
+                assignment.setStartedAt(null);
+                assignment.setCompletedAt(null);
+            } else {
+                assignment = new ReviewAssignment();
+                assignment.setSyllabus(syllabus);
+                assignment.setReviewer(reviewer);
+                assignment.setAssignedBy(hod);
+                assignment.setDueAt(dueAt);
+                assignment.setStatus(ReviewStatus.ASSIGNED);
             }
 
-            // 2) Chưa có record -> tạo mới
-            ReviewAssignment a = new ReviewAssignment();
-            a.setSyllabus(syllabus);
-            a.setReviewer(reviewer);
-            a.setAssignedBy(hod);
-            a.setDueAt(dueAt);
-            a.setStatus(ReviewStatus.ASSIGNED);
-
-            ReviewAssignment saved = repo.save(a);
+            ReviewAssignment saved = repo.save(assignment);
             created.add(saved);
-
-            String msgToReviewer = aiService.createRoleNotificationMessage(
-                    "REVIEWER",
-                    "Bạn được phân công review syllabus",
-                    syllabus.getCourse().getName(),
-                    syllabus.getTitle(),
-                    syllabus.getVersion(),
-                    "Deadline: " + dueAt,
-                    syllabus.getId()
-            );
-
-            Notification n = new Notification();
-            n.setUser(reviewer);
-            n.setMessage(msgToReviewer);
-            n.setRead(false);
-            n.setCreatedAt(LocalDateTime.now());
-            notificationRepository.save(n);
+            sendNotification(reviewer, syllabus, dueAt);
         }
-
         return created;
     }
 
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<ReviewAssignment> listForSyllabus(Long syllabusId) {
-        return repo.findBySyllabus_IdOrderByCreatedAtDesc(syllabusId);
-    }
-
+    // 3. Triển khai myAssignments
     @Override
     @Transactional(readOnly = true)
     public List<ReviewAssignment> myAssignments(Long reviewerId, ReviewStatus statusOrNull) {
@@ -169,53 +125,61 @@ public class ReviewAssignmentServiceImpl implements ReviewAssignmentService {
         return repo.findByReviewer_IdAndStatusOrderByDueAtAsc(reviewerId, statusOrNull);
     }
 
+    // 4. Triển khai start
     @Override
     public ReviewAssignment start(Long reviewerId, Long assignmentId) {
         ReviewAssignment a = repo.findByIdAndReviewer_Id(assignmentId, reviewerId)
-                .orElseThrow(() -> new RuntimeException("Assignment không tồn tại hoặc không thuộc bạn"));
+                .orElseThrow(() -> new AppException("Phân công không tồn tại", HttpStatus.NOT_FOUND));
 
-        if (a.getStatus() == ReviewStatus.CANCELLED) throw new RuntimeException("Assignment đã bị huỷ");
-        if (a.getStatus() == ReviewStatus.DONE) throw new RuntimeException("Assignment đã DONE");
+        if (a.getStatus() == ReviewStatus.CANCELLED) throw new AppException("Đã bị hủy", HttpStatus.BAD_REQUEST);
 
         a.setStatus(ReviewStatus.IN_REVIEW);
         if (a.getStartedAt() == null) a.setStartedAt(LocalDateTime.now());
         return repo.save(a);
     }
 
+    // 5. Triển khai done
     @Override
     public ReviewAssignment done(Long reviewerId, Long assignmentId) {
         ReviewAssignment a = repo.findByIdAndReviewer_Id(assignmentId, reviewerId)
-                .orElseThrow(() -> new RuntimeException("Assignment không tồn tại hoặc không thuộc bạn"));
-
-        if (a.getStatus() == ReviewStatus.CANCELLED) throw new RuntimeException("Assignment đã bị huỷ");
-        if (a.getStatus() == ReviewStatus.DONE) return a;
+                .orElseThrow(() -> new AppException("Phân công không tồn tại", HttpStatus.NOT_FOUND));
 
         a.setStatus(ReviewStatus.DONE);
         a.setCompletedAt(LocalDateTime.now());
-        if (a.getStartedAt() == null) a.setStartedAt(LocalDateTime.now());
         return repo.save(a);
     }
 
+    // 6. Triển khai cancel
     @Override
     public void cancel(Long hodId, Long assignmentId) {
         ReviewAssignment a = repo.findById(assignmentId)
-                .orElseThrow(() -> new RuntimeException("Assignment không tồn tại"));
-
-        // tối thiểu: cho HOD cancel (bạn có thể check HOD ownership sau)
+                .orElseThrow(() -> new AppException("Phân công không tồn tại", HttpStatus.NOT_FOUND));
         a.setStatus(ReviewStatus.CANCELLED);
         repo.save(a);
     }
 
+    // 7. Triển khai listAllForHod (Search)
     @Override
     @Transactional(readOnly = true)
     public List<ReviewAssignment> listAllForHod(
-            Long courseId,
-            Long syllabusId,
-            ReviewStatus status,
-            String reviewer,
-            LocalDateTime fromDue,
-            LocalDateTime toDue
+            Long courseId, Long syllabusId, ReviewStatus status,
+            String reviewer, LocalDateTime fromDue, LocalDateTime toDue
     ) {
         return repo.searchForHod(courseId, syllabusId, status, reviewer, fromDue, toDue);
+    }
+
+    // Hàm phụ trợ gửi Notification
+    private void sendNotification(User reviewer, Syllabus syllabus, LocalDateTime dueAt) {
+        String msg = aiService.createRoleNotificationMessage(
+                "REVIEWER", "Phân công review giáo trình",
+                syllabus.getCourse().getName(), syllabus.getTitle(),
+                syllabus.getVersion(), "Hạn: " + dueAt, syllabus.getId()
+        );
+        Notification n = new Notification();
+        n.setUser(reviewer);
+        n.setMessage(msg);
+        n.setRead(false);
+        n.setCreatedAt(LocalDateTime.now());
+        notificationRepository.save(n);
     }
 }
