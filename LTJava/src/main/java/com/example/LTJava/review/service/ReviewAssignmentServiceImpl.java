@@ -152,10 +152,25 @@ public class ReviewAssignmentServiceImpl implements ReviewAssignmentService {
     // 6. Triển khai cancel
     @Override
     public void cancel(Long hodId, Long assignmentId) {
+        // 1. Tìm bản phân công
         ReviewAssignment a = repo.findById(assignmentId)
                 .orElseThrow(() -> new AppException("Phân công không tồn tại", HttpStatus.NOT_FOUND));
+
+        // 2. Kiểm tra nếu đã bị hủy rồi (Chống spam/logic thừa)
+        if (a.getStatus() == ReviewStatus.CANCELLED) {
+            throw new AppException("Bản phân công này đã được hủy trước đó rồi.", HttpStatus.CONFLICT);
+        }
+
+        // 3. (Tùy chọn) Chặn hủy nếu đã hoàn thành (DONE)
+        if (a.getStatus() == ReviewStatus.DONE) {
+            throw new AppException("Không thể hủy bản phân công đã hoàn thành.", HttpStatus.BAD_REQUEST);
+        }
+
+        // 4. Thực hiện hủy
         a.setStatus(ReviewStatus.CANCELLED);
         repo.save(a);
+        throw new AppException("Hủy phân công đánh giá thành công!", HttpStatus.OK);
+
     }
 
     // 7. Triển khai listAllForHod (Search)

@@ -28,7 +28,7 @@ import com.example.LTJava.syllabus.repository.SyllabusHistoryRepository;
 import com.example.LTJava.syllabus.repository.SyllabusRepository;
 import com.example.LTJava.user.entity.User;
 import com.example.LTJava.user.repository.UserRepository;
-
+import com.example.LTJava.user.exception.AppException;
 
 @Service
 public class SyllabusServiceImpl implements SyllabusService {
@@ -66,16 +66,10 @@ public class SyllabusServiceImpl implements SyllabusService {
     public Syllabus createSyllabus(CreateSyllabusRequest request, Long lecturerId) {
 
         Course course = courseRepository.findById(request.getCourseId())
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Course không tồn tại với id=" + request.getCourseId()
-                ));
+                .orElseThrow(() -> new ResourceNotFoundException("Course không tồn tại với id=" + request.getCourseId()));
 
         User lecturer = userRepository.findById(lecturerId)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Lecturer không tồn tại với id=" + lecturerId
-                ));
+                .orElseThrow(() -> new ResourceNotFoundException("Lecturer không tồn tại với id=" + lecturerId));
 
         Syllabus syllabus = new Syllabus();
         syllabus.setCourse(course);
@@ -124,10 +118,10 @@ public class SyllabusServiceImpl implements SyllabusService {
 
         Syllabus syllabus = syllabusRepository
                 .findByIdAndCreatedBy_Id(syllabusId, lecturerId)
-                .orElseThrow(() -> new IllegalArgumentException("Syllabus không tồn tại hoặc không thuộc quyền của bạn"));
+                .orElseThrow(() -> new AppException("Syllabus không tồn tại hoặc không thuộc quyền của bạn", HttpStatus.FORBIDDEN));
 
         if (syllabus.getStatus() != SyllabusStatus.DRAFT) {
-            throw new IllegalArgumentException("Chỉ syllabus ở trạng thái DRAFT mới được chỉnh sửa");
+            throw new AppException("Chỉ syllabus ở trạng thái DRAFT mới được chỉnh sửa", HttpStatus.BAD_REQUEST);
         }
 
         syllabus.setTitle(request.getTitle());
@@ -167,11 +161,10 @@ public class SyllabusServiceImpl implements SyllabusService {
     @Override
     public void deleteSyllabus(Long syllabusId, Long lecturerId) {
         Syllabus syllabus = syllabusRepository.findByIdAndCreatedBy_Id(syllabusId, lecturerId)
-                .orElseThrow(() -> new IllegalArgumentException("Syllabus không tồn tại hoặc không thuộc quyền của bạn"));
+                .orElseThrow(() -> new ResourceNotFoundException("Syllabus không tồn tại hoặc không thuộc quyền của bạn"));
 
-        // ✅ chỉ cho xóa khi DRAFT
         if (syllabus.getStatus() != SyllabusStatus.DRAFT) {
-            throw new IllegalArgumentException("Chỉ syllabus ở trạng thái DRAFT mới được xóa");
+            throw new AppException("Chỉ syllabus ở trạng thái DRAFT mới được xóa", HttpStatus.BAD_REQUEST);
         }
 
         // 1) xóa content trước
@@ -185,10 +178,10 @@ public class SyllabusServiceImpl implements SyllabusService {
     @Override
     public Syllabus submitSyllabus(Long syllabusId, Long lecturerId) {
         Syllabus syllabus = syllabusRepository.findByIdAndCreatedBy_Id(syllabusId, lecturerId)
-                .orElseThrow(() -> new IllegalArgumentException("Syllabus không tồn tại hoặc không thuộc quyền của bạn"));
+                .orElseThrow(() -> new ResourceNotFoundException("Syllabus không tồn tại hoặc không thuộc quyền của bạn"));
 
         if (syllabus.getStatus() != SyllabusStatus.DRAFT) {
-            throw new IllegalArgumentException("Chỉ syllabus ở trạng thái DRAFT mới được submit");
+            throw new AppException("Chỉ syllabus ở trạng thái DRAFT mới được submit", HttpStatus.BAD_REQUEST);
         }
 
         saveHistory(syllabus);
@@ -330,7 +323,7 @@ public class SyllabusServiceImpl implements SyllabusService {
                 .orElseThrow(() -> new ResourceNotFoundException("Syllabus không tồn tại"));
 
         if (syllabus.getStatus() != SyllabusStatus.SUBMITTED) {
-            throw new IllegalArgumentException("Chỉ syllabus SUBMITTED mới được HoD duyệt");
+            throw new AppException("Chỉ syllabus SUBMITTED mới được HoD duyệt", HttpStatus.BAD_REQUEST);
         }
 
         syllabus.setStatus(SyllabusStatus.HOD_APPROVED);
@@ -783,11 +776,13 @@ public class SyllabusServiceImpl implements SyllabusService {
     @Override
     public void subscribeCourse(Long userId, Long courseId) {
         if (subRepo.existsByUser_IdAndCourse_Id(userId, courseId)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bạn đã đăng ký môn này rồi!");
+            throw new AppException("Bạn đã đăng ký môn này rồi!", HttpStatus.BAD_REQUEST);
         }
 
-        User user = userRepository.findById(userId).orElseThrow();
-        Course course = courseRepository.findById(courseId).orElseThrow();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User không tìm thấy"));
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new ResourceNotFoundException("Course không tìm thấy"));
 
         // ✅ Check tiên quyết
         var prereqs = course.getPrerequisites();
@@ -799,10 +794,7 @@ public class SyllabusServiceImpl implements SyllabusService {
                 if (!hasPre) missing.add(pre.getCode());
             }
             if (!missing.isEmpty()) {
-                throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST,
-                        "Chưa đủ môn tiên quyết: " + String.join(", ", missing)
-                );
+                throw new AppException("Chưa đủ môn tiên quyết: " + String.join(", ", missing), HttpStatus.BAD_REQUEST);
             }
         }
 

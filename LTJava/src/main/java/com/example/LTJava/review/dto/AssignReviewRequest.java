@@ -1,11 +1,15 @@
 package com.example.LTJava.review.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class AssignReviewRequest {
     private Long syllabusId;
-    private List<String> reviewerUsernames; // username = cccd
+    private List<String> reviewerUsernames; //
+    // username = cccd
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime dueAt;
 
     public Long getSyllabusId() { return syllabusId; }
