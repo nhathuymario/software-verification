@@ -11,6 +11,8 @@ import com.example.LTJava.syllabuscomment.entity.CommentStatus;
 import com.example.LTJava.syllabuscomment.entity.SyllabusComment;
 import com.example.LTJava.syllabuscomment.repository.SyllabusCommentRepository;
 import com.example.LTJava.user.entity.User;
+import com.example.LTJava.user.exception.AppException;
+import org.springframework.http.HttpStatus;
 import com.example.LTJava.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -64,29 +66,28 @@ public class SyllabusCommentServiceImpl implements SyllabusCommentService {
     // ===== ✅ Comment trong collaborative review (theo assignment) =====
     @Override
     public CommentResponse addCommentForAssignment(Long assignmentId, Long lecturerId, String content) {
-
+        // 1. Dùng AppException với 404 cho trường hợp không tồn tại
         ReviewAssignment assignment = assignmentRepo.findById(assignmentId)
-                .orElseThrow(() -> new RuntimeException("Review assignment không tồn tại"));
+                .orElseThrow(() -> new AppException("Phân công đánh giá không tồn tại", HttpStatus.NOT_FOUND));
 
+        // 2. Chặn comment khi đã kết thúc
         ReviewStatus rs = assignment.getStatus();
         if (rs == ReviewStatus.DONE || rs == ReviewStatus.CANCELLED) {
-            throw new RuntimeException("Không thể comment khi review đã kết thúc");
+            throw new AppException("Không thể bình luận khi quy trình review đã kết thúc hoặc bị hủy", HttpStatus.BAD_REQUEST);
         }
 
-        // ✅ chỉ reviewer được assign mới comment
+        // 3. Kiểm tra đúng chủ sở hữu (403 Forbidden)
         if (!assignment.getReviewer().getId().equals(lecturerId)) {
-            throw new RuntimeException("Bạn không phải reviewer của assignment này");
+            throw new AppException("Bạn không có quyền bình luận trên phân công này", HttpStatus.FORBIDDEN);
         }
 
-        Syllabus syllabus = assignment.getSyllabus(); // syllabus của assignment
-
-        // optional: vẫn siết syllabus DRAFT
+        Syllabus syllabus = assignment.getSyllabus();
         if (syllabus.getStatus() != SyllabusStatus.DRAFT) {
-            throw new RuntimeException("Chỉ được comment review khi syllabus ở trạng thái DRAFT");
+            throw new AppException("Chỉ được bình luận khi Syllabus đang ở trạng thái DRAFT", HttpStatus.BAD_REQUEST);
         }
 
         User commenter = userRepo.findById(lecturerId)
-                .orElseThrow(() -> new RuntimeException("User không tồn tại"));
+                .orElseThrow(() -> new AppException("Người dùng không tồn tại", HttpStatus.NOT_FOUND));
 
         SyllabusComment c = new SyllabusComment();
         c.setSyllabus(syllabus);
@@ -136,17 +137,18 @@ public class SyllabusCommentServiceImpl implements SyllabusCommentService {
     @Override
     public CommentResponse updateComment(Long commentId, Long lecturerId, String content) {
         SyllabusComment c = commentRepo.findById(commentId)
-                .orElseThrow(() -> new RuntimeException("Comment không tồn tại"));
+                .orElseThrow(() -> new AppException("Bình luận không tồn tại", HttpStatus.NOT_FOUND));
 
+        // Kiểm tra quyền sửa (Chỉ chủ nhân comment mới được sửa)
         if (!c.getCommenter().getId().equals(lecturerId)) {
-            throw new RuntimeException("Bạn không có quyền sửa comment này");
+            throw new AppException("Bạn không có quyền chỉnh sửa bình luận của người khác", HttpStatus.FORBIDDEN);
         }
 
-        // nếu comment thuộc assignment DONE/CANCELLED thì khóa sửa
+        // Khóa sửa nếu Review đã xong
         if (c.getAssignment() != null) {
             ReviewStatus rs = c.getAssignment().getStatus();
             if (rs == ReviewStatus.DONE || rs == ReviewStatus.CANCELLED) {
-                throw new RuntimeException("Không thể sửa comment khi review đã kết thúc");
+                throw new AppException("Quy trình review đã đóng, không thể chỉnh sửa bình luận", HttpStatus.BAD_REQUEST);
             }
         }
 
@@ -157,16 +159,16 @@ public class SyllabusCommentServiceImpl implements SyllabusCommentService {
     @Override
     public void deleteComment(Long commentId, Long lecturerId) {
         SyllabusComment c = commentRepo.findById(commentId)
-                .orElseThrow(() -> new RuntimeException("Comment không tồn tại"));
+                .orElseThrow(() -> new AppException("Bình luận không tồn tại", HttpStatus.NOT_FOUND));
 
         if (!c.getCommenter().getId().equals(lecturerId)) {
-            throw new RuntimeException("Bạn không có quyền xóa comment này");
+            throw new AppException("Bạn không có quyền xóa bình luận này", HttpStatus.FORBIDDEN);
         }
 
         if (c.getAssignment() != null) {
             ReviewStatus rs = c.getAssignment().getStatus();
             if (rs == ReviewStatus.DONE || rs == ReviewStatus.CANCELLED) {
-                throw new RuntimeException("Không thể xóa comment khi review đã kết thúc");
+                throw new AppException("Không thể xóa bình luận sau khi review đã hoàn thành", HttpStatus.BAD_REQUEST);
             }
         }
 
