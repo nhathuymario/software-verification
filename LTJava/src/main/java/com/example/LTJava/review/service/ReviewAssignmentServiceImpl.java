@@ -133,6 +133,11 @@ public class ReviewAssignmentServiceImpl implements ReviewAssignmentService {
 
         if (a.getStatus() == ReviewStatus.CANCELLED) throw new AppException("Đã bị hủy", HttpStatus.BAD_REQUEST);
 
+
+        if (a.getStatus() == ReviewStatus.DONE) {
+            throw new AppException("Đánh giá này đã được bắt đầu từ trước", HttpStatus.CONFLICT);
+        }
+
         a.setStatus(ReviewStatus.IN_REVIEW);
         if (a.getStartedAt() == null) a.setStartedAt(LocalDateTime.now());
         return repo.save(a);
@@ -141,11 +146,36 @@ public class ReviewAssignmentServiceImpl implements ReviewAssignmentService {
     // 5. Triển khai done
     @Override
     public ReviewAssignment done(Long reviewerId, Long assignmentId) {
+        // 1. Kiểm tra tồn tại
         ReviewAssignment a = repo.findByIdAndReviewer_Id(assignmentId, reviewerId)
                 .orElseThrow(() -> new AppException("Phân công không tồn tại", HttpStatus.NOT_FOUND));
 
+        // 2. Kiểm tra nếu đã bị hủy
+        if (a.getStatus() == ReviewStatus.CANCELLED) {
+            throw new AppException("Không thể hoàn thành vì phân công này đã bị hủy", HttpStatus.BAD_REQUEST);
+        }
+
+        // 3. Kiểm tra logic "vô lý": Chưa bắt đầu (Start) mà đã bấm hoàn thành (Done)
+        if (a.getStatus() == ReviewStatus.IN_REVIEW || a.getStartedAt() == null) {
+            throw new AppException("Bạn phải bắt đầu đánh giá trước khi bấm hoàn thành", HttpStatus.BAD_REQUEST);
+        }
+
+        // 4. Kiểm tra nếu đã hoàn thành trước đó rồi (Tránh bấm nhầm 2 lần)
+        if (a.getStatus() == ReviewStatus.DONE) {
+            throw new AppException("Đánh giá này đã được hoàn thành từ trước", HttpStatus.CONFLICT);
+        }
+
+        // 5. Kiểm tra thời hạn (Nếu dự án của bạn có cột dueAt)
+    /*
+    if (a.getDueAt() != null && a.getDueAt().isBefore(LocalDateTime.now())) {
+        throw new AppException("Đã quá hạn nộp đánh giá", HttpStatus.BAD_REQUEST);
+    }
+    */
+
+        // 6. Thực hiện cập nhật nếu mọi thứ hợp lệ
         a.setStatus(ReviewStatus.DONE);
         a.setCompletedAt(LocalDateTime.now());
+
         return repo.save(a);
     }
 

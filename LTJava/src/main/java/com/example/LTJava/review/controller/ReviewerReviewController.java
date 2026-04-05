@@ -2,6 +2,7 @@ package com.example.LTJava.review.controller;
 
 import java.util.List;
 
+import com.example.LTJava.common.dto.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -32,18 +33,26 @@ public class ReviewerReviewController {
     }
 
     @PutMapping("/{assignmentId}/start")
-    public ResponseEntity<ReviewAssignment> start(
+    public ResponseEntity<ApiResponse<ReviewAssignment>> start(
             @AuthenticationPrincipal CustomUserDetails currentUser,
             @PathVariable Long assignmentId
     ) {
-        return ResponseEntity.ok(service.start(currentUser.getId(), assignmentId));
+        ReviewAssignment result = service.start(currentUser.getId(), assignmentId);
+        return ResponseEntity.ok(
+                ApiResponse.success("Bắt đầu thực hiện đánh giá thành công!", result)
+        );
     }
 
     @PutMapping("/{assignmentId}/done")
-    public ResponseEntity<ReviewAssignment> done(
+    public ResponseEntity<ApiResponse<ReviewAssignment>> done(
             @AuthenticationPrincipal CustomUserDetails currentUser,
             @PathVariable Long assignmentId
     ) {
-        return ResponseEntity.ok(service.done(currentUser.getId(), assignmentId));
+
+        ReviewAssignment result = service.done(currentUser.getId(), assignmentId);
+
+        return ResponseEntity.ok(
+                ApiResponse.success("Bạn đã hoàn thành đánh giá.", result)
+        );
     }
 }
