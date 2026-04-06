@@ -1,22 +1,24 @@
 package com.example.LTJava.user.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 public class CreateUserRequest {
 
     @NotBlank(message = "Họ tên không được để trống")
-    @Size(min = 2, max = 100, message = "Họ tên phải từ 2 đến 100 ký tự")
+    @Size(min = 2, message = "Họ tên quá ngắn (tối thiểu phải có 2 ký tự)") // Biên dưới: 1 ký tự sẽ lỗi
+    @Size(max = 100, message = "Họ tên quá dài (tối đa chỉ 100 ký tự)")    // Biên trên: 101 ký tự sẽ lỗi
     private String fullName;
 
     @NotBlank(message = "CCCD không được để trống")
-    // BVA: Min=12, Max=12 đảm bảo độ dài chính xác
-    @Size(min = 12, max = 12, message = "CCCD phải có đúng 12 chữ số")
     @Pattern(regexp = "^[0-9]+$", message = "CCCD chỉ được chứa các chữ số")
+// Kiểm tra biên dưới (11 ký tự)
+    @Size(min = 12, message = "CCCD đang ngắn hơn quy định (phải đủ 12 chữ số)")
+// Kiểm tra biên trên (13 ký tự)
+    @Size(max = 12, message = "CCCD đang dài hơn quy định (chỉ được tối đa 12 chữ số)")
     private String cccd;
 
-    @NotBlank(message = "Ngày sinh không được để trống")
+    @NotNull(message = "Ngày sinh không được để trống")
+    @Past(message = "Ngày sinh phải là một ngày trong quá khứ")
     @Pattern(regexp = "^\\d{2}/\\d{2}/\\d{4}$", message = "Ngày sinh phải đúng định dạng dd/MM/yyyy")
     private String dateOfBirth;
 
