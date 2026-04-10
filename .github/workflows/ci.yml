@@ -51,6 +51,7 @@ jobs:
       - name: Run Spring Boot smoke test
         env:
           GEMINI_API_KEY: test-key
+          DB_PASSWORD: 123456
         run: mvn -f LTJava/pom.xml -Dtest=LtJavaApplicationTests test
 
   frontend:
