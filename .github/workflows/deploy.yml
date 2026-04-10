@@ -1,0 +1,68 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows:
+      - CI
+    types:
+      - completed
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy with Docker Compose
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    concurrency:
+      group: deploy-main
+      cancel-in-progress: false
+    steps:
+      - name: Deploy on server
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          script: |
+            set -euo pipefail
+            cd "${{ secrets.DEPLOY_PATH }}"
+
+            PREV_COMMIT="$(git rev-parse HEAD)"
+            echo "Previous commit: ${PREV_COMMIT}"
+
+            git fetch origin main
+            git pull --ff-only origin main
+
+            DEPLOY_OK=true
+
+            if ! docker compose up -d --build; then
+              DEPLOY_OK=false
+            fi
+
+            if [ "$DEPLOY_OK" = true ]; then
+              if ! docker compose ps --status running | grep -q "backend"; then
+                DEPLOY_OK=false
+              fi
+            fi
+
+            if [ "$DEPLOY_OK" = true ]; then
+              if ! docker compose logs --tail=300 backend 2>/dev/null | grep -q "Started LtJavaApplication"; then
+                DEPLOY_OK=false
+              fi
+            fi
+
+            if [ "$DEPLOY_OK" = false ]; then
+              echo "Deploy failed. Rolling back to ${PREV_COMMIT}"
+              git reset --hard "${PREV_COMMIT}"
+              docker compose up -d --build
+              echo "Rollback completed. Recent backend logs:"
+              docker compose logs --tail=120 backend || true
+              exit 1
+            fi
+
+            echo "Deploy successful on commit $(git rev-parse HEAD)"
+            docker compose ps
+            docker image prune -f

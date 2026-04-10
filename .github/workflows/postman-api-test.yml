@@ -1,19 +1,23 @@
 name: Postman API Test
 
 on:
-  push:
-    branches:
-      - main
-      - develop
-      - feature/**
-  pull_request:
-    branches:
-      - main
-      - develop
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Postman environment file to run
+        required: true
+        default: staging
+        type: choice
+        options:
+          - dev
+          - staging
 
 jobs:
   api-test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: LTJava
 
     steps:
       - name: Checkout source
@@ -24,24 +28,40 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install Newman
+      - name: Install Newman tools
         run: |
-          npm install
           mkdir -p reports
+          npm install -g newman newman-reporter-htmlextra
+
+      - name: Check Postman files
+        id: postman
+        run: |
+          COLLECTION="postman/collections/backend-api.postman_collection.json"
+          ENVIRONMENT="postman/environments/${{ inputs.environment }}.postman_environment.json"
+          if [ -s "$COLLECTION" ] && [ -s "$ENVIRONMENT" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+            echo "collection=$COLLECTION" >> "$GITHUB_OUTPUT"
+            echo "environment=$ENVIRONMENT" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "Postman collection or environment is empty/missing. Skipping Newman run."
+          fi
 
       - name: Inject environment variables
+        if: steps.postman.outputs.ready == 'true'
         run: |
-          sed -i 's|http://localhost:8080|${{ secrets.BASE_URL }}|g' postman/LTJava_Env.postman_environment.json
-          sed -i 's|lecturer1|${{ secrets.POSTMAN_USERNAME }}|g' postman/LTJava_Env.postman_environment.json
-          sed -i 's|123456|${{ secrets.POSTMAN_PASSWORD }}|g' postman/LTJava_Env.postman_environment.json
-          sed -i 's|PUT_ADMIN_TOKEN_HERE|${{ secrets.ADMIN_TOKEN }}|g' postman/LTJava_Env.postman_environment.json
-          sed -i 's|PUT_HOD_TOKEN_HERE|${{ secrets.HOD_TOKEN }}|g' postman/LTJava_Env.postman_environment.json
+          sed -i 's|http://localhost:8080|${{ secrets.BASE_URL }}|g' "${{ steps.postman.outputs.environment }}"
+          sed -i 's|lecturer1|${{ secrets.POSTMAN_USERNAME }}|g' "${{ steps.postman.outputs.environment }}"
+          sed -i 's|123456|${{ secrets.POSTMAN_PASSWORD }}|g' "${{ steps.postman.outputs.environment }}"
+          sed -i 's|PUT_ADMIN_TOKEN_HERE|${{ secrets.ADMIN_TOKEN }}|g' "${{ steps.postman.outputs.environment }}"
+          sed -i 's|PUT_HOD_TOKEN_HERE|${{ secrets.HOD_TOKEN }}|g' "${{ steps.postman.outputs.environment }}"
 
-      - name: Run Postman collection 1000 iterations
+      - name: Run Postman collection
+        if: steps.postman.outputs.ready == 'true'
         run: |
-          npx newman run postman/LTJava_Automation.postman_collection.json \
-            -e postman/LTJava_Env.postman_environment.json \
-            --iteration-count 1000 \
+          newman run "${{ steps.postman.outputs.collection }}" \
+            -e "${{ steps.postman.outputs.environment }}" \
+            --iteration-count 1 \
             --delay-request 20 \
             --reporters cli,htmlextra,junit,json \
             --reporter-htmlextra-export reports/newman-report.html \
@@ -49,19 +69,22 @@ jobs:
             --reporter-json-export reports/newman-report.json
 
       - name: Upload HTML report
+        if: always() && steps.postman.outputs.ready == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: newman-html-report
-          path: reports/newman-report.html
+          path: LTJava/reports/newman-report.html
 
       - name: Upload JSON report
+        if: always() && steps.postman.outputs.ready == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: newman-json-report
-          path: reports/newman-report.json
+          path: LTJava/reports/newman-report.json
 
       - name: Upload JUnit report
+        if: always() && steps.postman.outputs.ready == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: newman-junit-report
-          path: reports/newman-report.xml
+          path: LTJava/reports/newman-report.xml

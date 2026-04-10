@@ -1,0 +1,18 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-LtJavaApplication<LTJava>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.example.LTJava.LtJavaApplication",
+      "projectName": "LTJava",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env",
+      "env": {
+        "MY_API_KEY": "AIzaSyByzNbd_D3ktIijbolhMcsR1KsQiF9blC0", // Dán key của bạn vào đây
+        "DB_PASSWORD": "123456"
+      }
+    }
+  ]
+}
