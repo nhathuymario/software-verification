@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
+import jakarta.validation.Valid;
 
 import com.example.LTJava.auth.security.CustomUserDetails;
 import com.example.LTJava.profile.dto.ChangeMyPasswordRequest;
@@ -30,7 +30,7 @@ public class ProfileController {
     @PutMapping("/profile")
     public ResponseEntity<MeResponse> updateProfile(
             @AuthenticationPrincipal CustomUserDetails currentUser,
-            @RequestBody UpdateMyProfileRequest req
+            @Valid @RequestBody UpdateMyProfileRequest req
     ) {
         return ResponseEntity.ok(profileService.updateMyProfile(currentUser.getId(), req));
     }

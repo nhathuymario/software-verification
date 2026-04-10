@@ -5,11 +5,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.stream.Collectors;
-import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +21,7 @@ import com.example.LTJava.profile.dto.UpdateMyProfileRequest;
 import com.example.LTJava.profile.entity.UserProfile;
 import com.example.LTJava.profile.repository.UserProfileRepository;
 import com.example.LTJava.user.entity.User;
+import com.example.LTJava.user.exception.AppException;
 import com.example.LTJava.user.repository.UserRepository;
 
 @Service
@@ -29,6 +30,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Value("${app.upload.base-dir}")
     private String uploadBaseDir;
+
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
     private final PasswordEncoder passwordEncoder;
@@ -47,9 +49,8 @@ public class ProfileServiceImpl implements ProfileService {
     @Transactional(readOnly = true)
     public MeResponse getMe(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User không tồn tại"));
+                .orElseThrow(() -> new AppException("User không tồn tại", HttpStatus.NOT_FOUND));
 
-        // ✅ đổi sang findByUserId (tránh lỗi findByUser_Id không resolve)
         UserProfile profile = userProfileRepository.findByUserId(userId).orElse(null);
 
         return toMeResponse(user, profile);
@@ -57,18 +58,19 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public MeResponse updateMyProfile(Long userId, UpdateMyProfileRequest req) {
-        if (req == null) throw new RuntimeException("Thiếu dữ liệu cập nhật");
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User không tồn tại"));
-
-        // ✅ update fullName (thuộc User core)
-        String fullName = req.getFullName();
-        if (fullName != null && !fullName.trim().isEmpty()) {
-            user.setFullName(fullName.trim());
+        if (req == null) {
+            throw new AppException("Thiếu dữ liệu cập nhật", HttpStatus.BAD_REQUEST);
         }
 
-        // ✅ profile: upsert
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException("User không tồn tại", HttpStatus.NOT_FOUND));
+
+        // update fullName
+        if (req.getFullName() != null && !req.getFullName().trim().isEmpty()) {
+            user.setFullName(req.getFullName().trim());
+        }
+
         UserProfile profile = userProfileRepository.findByUserId(userId)
                 .orElseGet(() -> {
                     UserProfile p = new UserProfile();
@@ -76,21 +78,30 @@ public class ProfileServiceImpl implements ProfileService {
                     return p;
                 });
 
-        // ✅ dùng getter thay vì req.email/phone/... (tránh "Cannot resolve symbol")
+        // ✅ EMAIL VALIDATE
         String email = req.getEmail();
-        if (email != null) profile.setEmail(email.trim());
+        if (email != null) {
+            if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+                throw new AppException("Email không hợp lệ", HttpStatus.BAD_REQUEST);
+            }
+            profile.setEmail(email.trim());
+        }
 
-        String phone = req.getPhone();
-        if (phone != null) profile.setPhone(phone.trim());
+        if (req.getPhone() != null) {
+            profile.setPhone(req.getPhone().trim());
+        }
 
-        String address = req.getAddress();
-        if (address != null) profile.setAddress(address.trim());
+        if (req.getAddress() != null) {
+            profile.setAddress(req.getAddress().trim());
+        }
 
-        String avatarUrl = req.getAvatarUrl();
-        if (avatarUrl != null) profile.setAvatarUrl(avatarUrl.trim());
+        if (req.getAvatarUrl() != null) {
+            profile.setAvatarUrl(req.getAvatarUrl().trim());
+        }
 
-        String bio = req.getBio();
-        if (bio != null) profile.setBio(bio.trim());
+        if (req.getBio() != null) {
+            profile.setBio(req.getBio().trim());
+        }
 
         userRepository.save(user);
         userProfileRepository.save(profile);
@@ -100,18 +111,20 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public void changeMyPassword(Long userId, ChangeMyPasswordRequest req) {
+
         if (req == null || req.getCurrentPassword() == null || req.getNewPassword() == null) {
-            throw new RuntimeException("Thiếu dữ liệu đổi mật khẩu");
+            throw new AppException("Thiếu dữ liệu đổi mật khẩu", HttpStatus.BAD_REQUEST);
         }
+
         if (req.getNewPassword().length() < 6) {
-            throw new RuntimeException("Mật khẩu mới tối thiểu 6 ký tự");
+            throw new AppException("Mật khẩu mới tối thiểu 6 ký tự", HttpStatus.BAD_REQUEST);
         }
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User không tồn tại"));
+                .orElseThrow(() -> new AppException("User không tồn tại", HttpStatus.NOT_FOUND));
 
         if (!passwordEncoder.matches(req.getCurrentPassword(), user.getPassword())) {
-            throw new RuntimeException("Mật khẩu hiện tại không đúng");
+            throw new AppException("Mật khẩu hiện tại không đúng", HttpStatus.BAD_REQUEST);
         }
 
         user.setPassword(passwordEncoder.encode(req.getNewPassword()));
@@ -120,17 +133,18 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public String uploadMyAvatar(Long userId, MultipartFile file) {
+
         if (file == null || file.isEmpty()) {
-            throw new RuntimeException("File avatar rỗng");
+            throw new AppException("File avatar rỗng", HttpStatus.BAD_REQUEST);
         }
 
         String contentType = file.getContentType();
         if (contentType == null || !contentType.startsWith("image/")) {
-            throw new RuntimeException("Chỉ cho phép upload file ảnh");
+            throw new AppException("Chỉ cho phép upload file ảnh", HttpStatus.BAD_REQUEST);
         }
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User không tồn tại"));
+                .orElseThrow(() -> new AppException("User không tồn tại", HttpStatus.NOT_FOUND));
 
         UserProfile profile = userProfileRepository.findByUserId(userId)
                 .orElseGet(() -> {
@@ -147,14 +161,14 @@ public class ProfileServiceImpl implements ProfileService {
 
         String fileName = UUID.randomUUID() + ext;
 
-        // ✅ lưu vào: ${app.upload.base-dir}/avatars/<fileName>
         Path avatarDir = Paths.get(uploadBaseDir, "avatars");
+
         try {
             Files.createDirectories(avatarDir);
             Path dest = avatarDir.resolve(fileName).normalize();
             Files.copy(file.getInputStream(), dest, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            throw new RuntimeException("Không lưu được file avatar", e);
+            throw new AppException("Không lưu được file avatar", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         String avatarUrl = "/uploads/avatars/" + fileName;
