@@ -37,9 +37,6 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=10
-    defaults:
-      run:
-        working-directory: LTJava
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
@@ -51,13 +48,10 @@ jobs:
           java-version: 21
           cache: maven
 
-      - name: Make Maven wrapper executable
-        run: chmod +x mvnw
-
       - name: Run Spring Boot smoke test
         env:
           GEMINI_API_KEY: test-key
-        run: ./mvnw -Dtest=LtJavaApplicationTests test
+        run: mvn -f LTJava/pom.xml -Dtest=LtJavaApplicationTests test
 
   frontend:
     name: Frontend build
