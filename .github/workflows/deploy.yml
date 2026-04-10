@@ -1,4 +1,4 @@
-name: Deploy
+name: Docker Publish
 
 on:
   workflow_dispatch:
@@ -12,57 +12,46 @@ on:
 
 jobs:
   deploy:
-    name: Deploy with Docker Compose
+    name: Build and push Docker images
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     concurrency:
       group: deploy-main
       cancel-in-progress: false
     steps:
-      - name: Deploy on server
-        uses: appleboy/ssh-action@v1.2.0
+      - name: Checkout source
+        uses: actions/checkout@v4
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT || 22 }}
-          script: |
-            set -euo pipefail
-            cd "${{ secrets.DEPLOY_PATH }}"
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
-            PREV_COMMIT="$(git rev-parse HEAD)"
-            echo "Previous commit: ${PREV_COMMIT}"
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-            git fetch origin main
-            git pull --ff-only origin main
+      - name: Set image names
+        id: images
+        run: |
+          IMAGE_TAG="$(git rev-parse HEAD)"
+          echo "tag=${IMAGE_TAG}" >> "$GITHUB_OUTPUT"
+          echo "backend=${{ secrets.DOCKERHUB_USERNAME }}/backend-service" >> "$GITHUB_OUTPUT"
+          echo "frontend=${{ secrets.DOCKERHUB_USERNAME }}/frontend-service" >> "$GITHUB_OUTPUT"
 
-            DEPLOY_OK=true
+      - name: Build and push backend image
+        run: |
+          docker build \
+            -t "${{ steps.images.outputs.backend }}:${{ steps.images.outputs.tag }}" \
+            -t "${{ steps.images.outputs.backend }}:latest" \
+            ./LTJava
+          docker push "${{ steps.images.outputs.backend }}:${{ steps.images.outputs.tag }}"
+          docker push "${{ steps.images.outputs.backend }}:latest"
 
-            if ! docker compose up -d --build; then
-              DEPLOY_OK=false
-            fi
-
-            if [ "$DEPLOY_OK" = true ]; then
-              if ! docker compose ps --status running | grep -q "backend"; then
-                DEPLOY_OK=false
-              fi
-            fi
-
-            if [ "$DEPLOY_OK" = true ]; then
-              if ! docker compose logs --tail=300 backend 2>/dev/null | grep -q "Started LtJavaApplication"; then
-                DEPLOY_OK=false
-              fi
-            fi
-
-            if [ "$DEPLOY_OK" = false ]; then
-              echo "Deploy failed. Rolling back to ${PREV_COMMIT}"
-              git reset --hard "${PREV_COMMIT}"
-              docker compose up -d --build
-              echo "Rollback completed. Recent backend logs:"
-              docker compose logs --tail=120 backend || true
-              exit 1
-            fi
-
-            echo "Deploy successful on commit $(git rev-parse HEAD)"
-            docker compose ps
-            docker image prune -f
+      - name: Build and push frontend image
+        run: |
+          docker build \
+            -t "${{ steps.images.outputs.frontend }}:${{ steps.images.outputs.tag }}" \
+            -t "${{ steps.images.outputs.frontend }}:latest" \
+            ./frontend
+          docker push "${{ steps.images.outputs.frontend }}:${{ steps.images.outputs.tag }}"
+          docker push "${{ steps.images.outputs.frontend }}:latest"
