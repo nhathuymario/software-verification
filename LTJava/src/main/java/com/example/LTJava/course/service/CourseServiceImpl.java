@@ -30,7 +30,7 @@ public class CourseServiceImpl implements CourseService {
     public Course1 create(CreateCourseRequest req) {
 
         if (req.getCode() == null || req.getCode().isBlank()) {
-            throw new IllegalArgumentException("Course code không được để trống");
+            throw new IllegalArgumentException("Course code không được để trống test ");
         }
         if (req.getName() == null || req.getName().isBlank()) {
             throw new IllegalArgumentException("Course name không được để trống");

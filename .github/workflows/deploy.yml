@@ -21,7 +21,7 @@ jobs:
     permissions:
       contents: read
     env:
-      APP_DIR: $HOME
+      APP_DIR: /home/${{ secrets.EC2_USER }}
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
@@ -102,9 +102,9 @@ jobs:
           port: ${{ secrets.EC2_PORT || 22 }}
           script: |
             cd ${{ env.APP_DIR }}
-            mv docker-compose.ec2.yml docker-compose.yml
-            mv deploy.env .env
-            echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-            docker compose pull
-            docker compose up -d --remove-orphans
-            docker image prune -f
+            mv -f docker-compose.ec2.yml docker-compose.yml
+            mv -f deploy.env .env
+            echo "${{ secrets.DOCKERHUB_TOKEN }}" | sudo docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+            sudo docker compose pull
+            sudo docker compose up -d --force-recreate --remove-orphans
+            sudo docker image prune -f
