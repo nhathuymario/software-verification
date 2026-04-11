@@ -21,7 +21,7 @@ jobs:
     permissions:
       contents: read
     env:
-      APP_DIR: ~
+      APP_DIR: $HOME
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
