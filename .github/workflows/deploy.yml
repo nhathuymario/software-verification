@@ -21,7 +21,7 @@ jobs:
     permissions:
       contents: read
     env:
-      APP_DIR: /opt/ltjava
+      APP_DIR: ~
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
