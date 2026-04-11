@@ -48,7 +48,7 @@ export default function ProfileEditPage() {
     const avatarPreview = avatarFile
         ? URL.createObjectURL(avatarFile)
         : me?.profile?.avatarUrl
-            ? `http://localhost:8081${me.profile.avatarUrl}`
+            ? me.profile.avatarUrl
             : null;
 
     const save = async () => {

@@ -35,9 +35,7 @@ export default function ProfilePage() {
         })();
     }, []);
 
-    const avatarSrc = me?.profile?.avatarUrl
-        ? `http://localhost:8081${me.profile.avatarUrl}`
-        : null;
+    const avatarSrc = me?.profile?.avatarUrl || null;
 
     if (loading) return <div className="lec-empty">Đang tải...</div>;
     if (err) return <div className="lec-empty">❌ {err}</div>;

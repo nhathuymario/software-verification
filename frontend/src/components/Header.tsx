@@ -98,8 +98,7 @@ export default function Header({ username, onProfile, showMenu = true }: HeaderP
     );
 
     // ⚠️ Nếu bạn dùng gateway thì đổi baseUrl cho đúng
-    const API_BASE = "http://localhost:8081";
-    const avatarUrl = me?.profile?.avatarUrl ? `${API_BASE}${me.profile.avatarUrl}` : "";
+    const avatarUrl = me?.profile?.avatarUrl || "";
 
     const initial = displayName.charAt(0).toUpperCase();
 
