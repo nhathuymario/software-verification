@@ -19,7 +19,7 @@ export const HEADER_ACTIONS: HeaderAction[] = [
   // ✅ AA
   {
     key: "aa-create-course",
-    label: "Tạo môn học",
+    label: "Tạo môn học.",
     to: "/aa/courses/new",
     roles: ["AA"],
     icon: "➕",

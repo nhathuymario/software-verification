@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
 
         String fullName = request.getFullName();
         if (fullName == null || fullName.isBlank()) {
-            throw new IllegalArgumentException("Full name không được để trống");
+            throw new IllegalArgumentException("Full name không được để trống test");
         }
 
         String dobStr = request.getDateOfBirth();
