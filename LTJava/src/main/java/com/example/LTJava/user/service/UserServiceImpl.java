@@ -66,12 +66,12 @@ public class UserServiceImpl implements UserService {
 
         String fullName = request.getFullName();
         if (fullName == null || fullName.isBlank()) {
-            throw new IllegalArgumentException("Full name không được để trống test");
+            throw new IllegalArgumentException("Full name không được để trống");
         }
 
         String dobStr = request.getDateOfBirth();
         if (dobStr == null || dobStr.isBlank()) {
-            throw new IllegalArgumentException("Ngày sinh không được để trống test");
+            throw new IllegalArgumentException("Ngày sinh không được để trống");
         }
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
