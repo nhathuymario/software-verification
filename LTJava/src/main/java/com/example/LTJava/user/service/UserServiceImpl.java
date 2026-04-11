@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
 
         String dobStr = request.getDateOfBirth();
         if (dobStr == null || dobStr.isBlank()) {
-            throw new IllegalArgumentException("Ngày sinh không được để trống");
+            throw new IllegalArgumentException("Ngày sinh không được để trống test");
         }
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
