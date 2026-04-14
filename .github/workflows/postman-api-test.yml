@@ -70,10 +70,39 @@ jobs:
             exit 1
           fi
 
+      - name: Resolve base URL from environment
+        env:
+          DEV_BASE_URL: ${{ vars.DEV_BASE_URL || secrets.DEV_BASE_URL }}
+          STAGING_BASE_URL: ${{ vars.STAGING_BASE_URL || secrets.STAGING_BASE_URL }}
+        run: |
+          case "$POSTMAN_ENV" in
+            dev)
+              BASE_URL="$DEV_BASE_URL"
+              ;;
+            staging)
+              BASE_URL="$STAGING_BASE_URL"
+              ;;
+            *)
+              echo "Unsupported environment: $POSTMAN_ENV"
+              exit 1
+              ;;
+          esac
+
+          if [ -z "$BASE_URL" ]; then
+            echo "Missing base URL for environment '$POSTMAN_ENV'. Set DEV_BASE_URL or STAGING_BASE_URL as a repository variable/secret."
+            exit 1
+          fi
+
+          if echo "$BASE_URL" | grep -Eq 'localhost|127\.0\.0\.1'; then
+            echo "BASE_URL for '$POSTMAN_ENV' points to localhost/127.0.0.1, which GitHub-hosted runners cannot reach."
+            exit 1
+          fi
+
+          echo "BASE_URL=$BASE_URL" >> "$GITHUB_ENV"
+
       - name: Inject runtime variables into Postman environment
         env:
           ENVIRONMENT_PATH: ${{ steps.postman_paths.outputs.environment }}
-          BASE_URL: ${{ secrets.BASE_URL }}
           POSTMAN_USERNAME_ADMIN: ${{ secrets.POSTMAN_USERNAME_ADMIN }}
           POSTMAN_USERNAME_LECTURER: ${{ secrets.POSTMAN_USERNAME_LECTURER }}
           POSTMAN_USERNAME_HOD: ${{ secrets.POSTMAN_USERNAME_HOD }}
@@ -89,7 +118,7 @@ jobs:
           const baseUrl = process.env.BASE_URL;
 
           if (!baseUrl || !baseUrl.trim()) {
-            console.error('Missing BASE_URL secret. Please set repository secret BASE_URL before running Postman tests.');
+            console.error('Missing BASE_URL after environment resolution. Check DEV_BASE_URL/STAGING_BASE_URL secrets or variables.');
             process.exit(1);
           }
 
