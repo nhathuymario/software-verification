@@ -1,6 +1,23 @@
 name: Postman API Test
 
 on:
+  push:
+    branches:
+      - main
+      - develop
+      - feature/**
+    paths:
+      - LTJava/postman/**
+      - .github/workflows/postman-api-test.yml
+      - LTJava/src/**
+  pull_request:
+    branches:
+      - main
+      - develop
+    paths:
+      - LTJava/postman/**
+      - .github/workflows/postman-api-test.yml
+      - LTJava/src/**
   workflow_dispatch:
     inputs:
       environment:
@@ -15,6 +32,8 @@ on:
 jobs:
   api-test:
     runs-on: ubuntu-latest
+    env:
+      POSTMAN_ENV: ${{ inputs.environment || 'staging' }}
     defaults:
       run:
         working-directory: LTJava
@@ -34,33 +53,75 @@ jobs:
           npm install -g newman newman-reporter-htmlextra
 
       - name: Check Postman files
-        id: postman
+        id: postman_paths
         run: |
           COLLECTION="postman/collections/backend-api.postman_collection.json"
-          ENVIRONMENT="postman/environments/${{ inputs.environment }}.postman_environment.json"
-          if [ -s "$COLLECTION" ] && [ -s "$ENVIRONMENT" ]; then
-            echo "ready=true" >> "$GITHUB_OUTPUT"
-            echo "collection=$COLLECTION" >> "$GITHUB_OUTPUT"
-            echo "environment=$ENVIRONMENT" >> "$GITHUB_OUTPUT"
-          else
-            echo "ready=false" >> "$GITHUB_OUTPUT"
-            echo "Postman collection or environment is empty/missing. Skipping Newman run."
+          ENVIRONMENT="postman/environments/${POSTMAN_ENV}.postman_environment.json"
+          echo "collection=$COLLECTION" >> "$GITHUB_OUTPUT"
+          echo "environment=$ENVIRONMENT" >> "$GITHUB_OUTPUT"
+
+          if [ ! -s "$COLLECTION" ]; then
+            echo "Missing or empty Postman collection: $COLLECTION"
+            exit 1
           fi
 
-      - name: Inject environment variables
-        if: steps.postman.outputs.ready == 'true'
+          if [ ! -s "$ENVIRONMENT" ]; then
+            echo "Missing or empty Postman environment: $ENVIRONMENT"
+            exit 1
+          fi
+
+      - name: Inject runtime variables into Postman environment
+        env:
+          ENVIRONMENT_PATH: ${{ steps.postman_paths.outputs.environment }}
+          BASE_URL: ${{ secrets.BASE_URL }}
+          POSTMAN_USERNAME_ADMIN: ${{ secrets.POSTMAN_USERNAME_ADMIN }}
+          POSTMAN_USERNAME_LECTURER: ${{ secrets.POSTMAN_USERNAME_LECTURER }}
+          POSTMAN_USERNAME_HOD: ${{ secrets.POSTMAN_USERNAME_HOD }}
+          POSTMAN_USERNAME_AA: ${{ secrets.POSTMAN_USERNAME_AA }}
+          POSTMAN_USERNAME_PRINCIPAL: ${{ secrets.POSTMAN_USERNAME_PRINCIPAL }}
+          POSTMAN_USERNAME_STUDENT: ${{ secrets.POSTMAN_USERNAME_STUDENT }}
+          POSTMAN_PASSWORD_ADMIN: ${{ secrets.POSTMAN_PASSWORD_ADMIN }}
+          POSTMAN_PASSWORD_DEFAULT: ${{ secrets.POSTMAN_PASSWORD_DEFAULT }}
         run: |
-          sed -i 's|http://localhost:8080|${{ secrets.BASE_URL }}|g' "${{ steps.postman.outputs.environment }}"
-          sed -i 's|lecturer1|${{ secrets.POSTMAN_USERNAME }}|g' "${{ steps.postman.outputs.environment }}"
-          sed -i 's|123456|${{ secrets.POSTMAN_PASSWORD }}|g' "${{ steps.postman.outputs.environment }}"
-          sed -i 's|PUT_ADMIN_TOKEN_HERE|${{ secrets.ADMIN_TOKEN }}|g' "${{ steps.postman.outputs.environment }}"
-          sed -i 's|PUT_HOD_TOKEN_HERE|${{ secrets.HOD_TOKEN }}|g' "${{ steps.postman.outputs.environment }}"
+          node <<'NODE'
+          const fs = require('fs');
+          const path = process.env.ENVIRONMENT_PATH;
+
+          const raw = fs.readFileSync(path, 'utf8');
+          const envJson = JSON.parse(raw);
+
+          const mappedValues = {
+            base_url: process.env.BASE_URL,
+            usernameadmin: process.env.POSTMAN_USERNAME_ADMIN,
+            usernamelecturer: process.env.POSTMAN_USERNAME_LECTURER,
+            usernamehod: process.env.POSTMAN_USERNAME_HOD,
+            usernameaa: process.env.POSTMAN_USERNAME_AA,
+            usernameprincipal: process.env.POSTMAN_USERNAME_PRINCIPAL,
+            usernamestudent: process.env.POSTMAN_USERNAME_STUDENT,
+            passwordadmin: process.env.POSTMAN_PASSWORD_ADMIN,
+            password: process.env.POSTMAN_PASSWORD_DEFAULT,
+          };
+
+          const values = Array.isArray(envJson.values) ? envJson.values : [];
+          const byKey = new Map(values.map((v) => [v.key, v]));
+
+          for (const [key, value] of Object.entries(mappedValues)) {
+            if (!value) continue;
+            if (byKey.has(key)) {
+              byKey.get(key).value = value;
+            } else {
+              values.push({ key, value, type: 'default', enabled: true });
+            }
+          }
+
+          envJson.values = values;
+          fs.writeFileSync(path, JSON.stringify(envJson, null, 2));
+          NODE
 
       - name: Run Postman collection
-        if: steps.postman.outputs.ready == 'true'
         run: |
-          newman run "${{ steps.postman.outputs.collection }}" \
-            -e "${{ steps.postman.outputs.environment }}" \
+          newman run "${{ steps.postman_paths.outputs.collection }}" \
+            -e "${{ steps.postman_paths.outputs.environment }}" \
             --iteration-count 1 \
             --delay-request 20 \
             --reporters cli,htmlextra,junit,json \
@@ -69,21 +130,21 @@ jobs:
             --reporter-json-export reports/newman-report.json
 
       - name: Upload HTML report
-        if: always() && steps.postman.outputs.ready == 'true'
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: newman-html-report
           path: LTJava/reports/newman-report.html
 
       - name: Upload JSON report
-        if: always() && steps.postman.outputs.ready == 'true'
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: newman-json-report
           path: LTJava/reports/newman-report.json
 
       - name: Upload JUnit report
-        if: always() && steps.postman.outputs.ready == 'true'
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: newman-junit-report
