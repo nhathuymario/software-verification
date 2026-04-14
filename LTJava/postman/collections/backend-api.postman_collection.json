@@ -16,9 +16,7 @@
             {
               "listen": "test",
               "script": {
-                "exec": [
-                  ""
-                ],
+                "exec": [""],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -39,14 +37,8 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/login",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "auth",
-                "login"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
             }
           },
           "response": []
@@ -88,9 +80,7 @@
             {
               "listen": "prerequest",
               "script": {
-                "exec": [
-                  ""
-                ],
+                "exec": [""],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -114,14 +104,8 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/login",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "auth",
-                "login"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
             }
           },
           "response": []
@@ -142,14 +126,8 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/login",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "auth",
-                "login"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
             }
           },
           "response": []
@@ -160,9 +138,7 @@
             {
               "listen": "test",
               "script": {
-                "exec": [
-                  ""
-                ],
+                "exec": [""],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -183,14 +159,8 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/login",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "auth",
-                "login"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
             }
           },
           "response": []
@@ -201,9 +171,7 @@
             {
               "listen": "test",
               "script": {
-                "exec": [
-                  ""
-                ],
+                "exec": [""],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -224,14 +192,8 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/login",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "auth",
-                "login"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
             }
           },
           "response": []
@@ -242,9 +204,7 @@
             {
               "listen": "test",
               "script": {
-                "exec": [
-                  ""
-                ],
+                "exec": [""],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -265,14 +225,8 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/login",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "auth",
-                "login"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
             }
           },
           "response": []
@@ -318,14 +272,8 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/auth/me",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "auth",
-                "me"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "me"]
             }
           },
           "response": []
@@ -353,17 +301,8 @@
             "url": {
               "raw": "https://nguyennhathuy15012005.atlassian.net/rest/api/3/project",
               "protocol": "https",
-              "host": [
-                "nguyennhathuy15012005",
-                "atlassian",
-                "net"
-              ],
-              "path": [
-                "rest",
-                "api",
-                "3",
-                "project"
-              ]
+              "host": ["nguyennhathuy15012005", "atlassian", "net"],
+              "path": ["rest", "api", "3", "project"]
             }
           },
           "response": []
@@ -374,9 +313,7 @@
             {
               "listen": "test",
               "script": {
-                "exec": [
-                  ""
-                ],
+                "exec": [""],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -397,14 +334,8 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/login",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "auth",
-                "login"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
             }
           },
           "response": []
@@ -420,9 +351,7 @@
             "type": "text/javascript",
             "packages": {},
             "requests": {},
-            "exec": [
-              ""
-            ]
+            "exec": [""]
           }
         },
         {
@@ -550,9 +479,7 @@
                 {
                   "listen": "prerequest",
                   "script": {
-                    "exec": [
-                      ""
-                    ],
+                    "exec": [""],
                     "type": "text/javascript",
                     "packages": {},
                     "requests": {}
@@ -576,14 +503,8 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/course/{{course_id}}",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "course",
-                    "{{course_id}}"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "course", "{{course_id}}"]
                 }
               },
               "response": []
@@ -594,9 +515,7 @@
                 {
                   "listen": "test",
                   "script": {
-                    "exec": [
-                      ""
-                    ],
+                    "exec": [""],
                     "type": "text/javascript",
                     "packages": {},
                     "requests": {}
@@ -608,13 +527,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/course",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "course"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "course"]
                 }
               },
               "response": []
@@ -655,14 +569,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/course/my",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "course",
-                    "my"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "course", "my"]
                 }
               },
               "response": []
@@ -685,9 +593,7 @@
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {},
-                "exec": [
-                  ""
-                ]
+                "exec": [""]
               }
             },
             {
@@ -696,9 +602,7 @@
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {},
-                "exec": [
-                  ""
-                ]
+                "exec": [""]
               }
             }
           ]
@@ -757,14 +661,8 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/course/create",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "course",
-                    "create"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "course", "create"]
                 }
               },
               "response": []
@@ -787,9 +685,7 @@
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {},
-                "exec": [
-                  ""
-                ]
+                "exec": [""]
               }
             },
             {
@@ -798,9 +694,7 @@
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {},
-                "exec": [
-                  ""
-                ]
+                "exec": [""]
               }
             }
           ]
@@ -816,9 +710,7 @@
             "type": "text/javascript",
             "packages": {},
             "requests": {},
-            "exec": [
-              ""
-            ]
+            "exec": [""]
           }
         },
         {
@@ -827,9 +719,7 @@
             "type": "text/javascript",
             "packages": {},
             "requests": {},
-            "exec": [
-              ""
-            ]
+            "exec": [""]
           }
         }
       ]
@@ -871,15 +761,8 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/users/me/profile",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "users",
-                    "me",
-                    "profile"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "users", "me", "profile"]
                 }
               },
               "response": []
@@ -922,15 +805,8 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/users/me/password",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "users",
-                    "me",
-                    "password"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "users", "me", "password"]
                 }
               },
               "response": []
@@ -970,15 +846,8 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/users/me/avatar",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "users",
-                    "me",
-                    "avatar"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "users", "me", "avatar"]
                 }
               },
               "response": []
@@ -1025,14 +894,8 @@
             },
             "url": {
               "raw": "{{base_url}}/api/users/me",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "users",
-                "me"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "me"]
             }
           },
           "response": []
@@ -1107,15 +970,8 @@
             },
             "url": {
               "raw": "{{base_url}}/api/users/me/profile",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "users",
-                "me",
-                "profile"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "me", "profile"]
             }
           },
           "response": []
@@ -1173,15 +1029,8 @@
             },
             "url": {
               "raw": "{{base_url}}/api/users/me/avatar",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "users",
-                "me",
-                "avatar"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "me", "avatar"]
             }
           },
           "response": []
@@ -1247,15 +1096,8 @@
             },
             "url": {
               "raw": "{{base_url}}/api/users/me/password",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "users",
-                "me",
-                "password"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "me", "password"]
             }
           },
           "response": []
@@ -1278,9 +1120,7 @@
             "type": "text/javascript",
             "packages": {},
             "requests": {},
-            "exec": [
-              ""
-            ]
+            "exec": [""]
           }
         },
         {
@@ -1289,9 +1129,7 @@
             "type": "text/javascript",
             "packages": {},
             "requests": {},
-            "exec": [
-              ""
-            ]
+            "exec": [""]
           }
         }
       ]
@@ -1357,16 +1195,8 @@
                     },
                     "url": {
                       "raw": "{{base_url}}/api/lecturer/syllabus/36/submit",
-                      "host": [
-                        "{{base_url}}"
-                      ],
-                      "path": [
-                        "api",
-                        "lecturer",
-                        "syllabus",
-                        "36",
-                        "submit"
-                      ]
+                      "host": ["{{base_url}}"],
+                      "path": ["api", "lecturer", "syllabus", "36", "submit"]
                     }
                   },
                   "response": []
@@ -1417,15 +1247,8 @@
                     },
                     "url": {
                       "raw": "{{base_url}}/api/lecturer/syllabus/36",
-                      "host": [
-                        "{{base_url}}"
-                      ],
-                      "path": [
-                        "api",
-                        "lecturer",
-                        "syllabus",
-                        "36"
-                      ]
+                      "host": ["{{base_url}}"],
+                      "path": ["api", "lecturer", "syllabus", "36"]
                     }
                   },
                   "response": []
@@ -1449,9 +1272,7 @@
                     {
                       "listen": "prerequest",
                       "script": {
-                        "exec": [
-                          ""
-                        ],
+                        "exec": [""],
                         "type": "text/javascript",
                         "packages": {},
                         "requests": {}
@@ -1463,16 +1284,8 @@
                     "header": [],
                     "url": {
                       "raw": "{{base_url}}/api/lecturer/syllabus/36/resubmit?status=REQUESTEDIT&status =REJECTED",
-                      "host": [
-                        "{{base_url}}"
-                      ],
-                      "path": [
-                        "api",
-                        "lecturer",
-                        "syllabus",
-                        "36",
-                        "resubmit"
-                      ],
+                      "host": ["{{base_url}}"],
+                      "path": ["api", "lecturer", "syllabus", "36", "resubmit"],
                       "query": [
                         {
                           "key": "status",
@@ -1493,9 +1306,7 @@
                     {
                       "listen": "prerequest",
                       "script": {
-                        "exec": [
-                          ""
-                        ],
+                        "exec": [""],
                         "type": "text/javascript",
                         "packages": {},
                         "requests": {}
@@ -1520,15 +1331,8 @@
                     "header": [],
                     "url": {
                       "raw": "{{base_url}}/api/lecturer/syllabus/36",
-                      "host": [
-                        "{{base_url}}"
-                      ],
-                      "path": [
-                        "api",
-                        "lecturer",
-                        "syllabus",
-                        "36"
-                      ]
+                      "host": ["{{base_url}}"],
+                      "path": ["api", "lecturer", "syllabus", "36"]
                     }
                   },
                   "response": []
@@ -1539,9 +1343,7 @@
                     {
                       "listen": "prerequest",
                       "script": {
-                        "exec": [
-                          ""
-                        ],
+                        "exec": [""],
                         "type": "text/javascript",
                         "packages": {},
                         "requests": {}
@@ -1566,9 +1368,7 @@
                     "header": [],
                     "url": {
                       "raw": "{{base_url}}/api/lecturer/syllabus/36/move-to-draft?status=REQUESTEDIT",
-                      "host": [
-                        "{{base_url}}"
-                      ],
+                      "host": ["{{base_url}}"],
                       "path": [
                         "api",
                         "lecturer",
@@ -1608,9 +1408,7 @@
                     "header": [],
                     "url": {
                       "raw": "{{base_url}}/api/lecturer/syllabus/34/new-version?status=PUBLISHED",
-                      "host": [
-                        "{{base_url}}"
-                      ],
+                      "host": ["{{base_url}}"],
                       "path": [
                         "api",
                         "lecturer",
@@ -1699,14 +1497,8 @@
                     },
                     "url": {
                       "raw": "{{base_url}}/api/lecturer/syllabus",
-                      "host": [
-                        "{{base_url}}"
-                      ],
-                      "path": [
-                        "api",
-                        "lecturer",
-                        "syllabus"
-                      ]
+                      "host": ["{{base_url}}"],
+                      "path": ["api", "lecturer", "syllabus"]
                     }
                   },
                   "response": []
@@ -1812,14 +1604,8 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/lecturer/syllabus",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "lecturer",
-                    "syllabus"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "lecturer", "syllabus"]
                 }
               },
               "response": []
@@ -1874,15 +1660,8 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/lecturer/syllabus/{{syllabus_id}}",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "lecturer",
-                    "syllabus",
-                    "{{syllabus_id}}"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "lecturer", "syllabus", "{{syllabus_id}}"]
                 }
               },
               "response": []
@@ -1947,9 +1726,7 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/lecturer/syllabus/{{syllabus_id}}/submit",
-                  "host": [
-                    "{{base_url}}"
-                  ],
+                  "host": ["{{base_url}}"],
                   "path": [
                     "api",
                     "lecturer",
@@ -1967,9 +1744,7 @@
                 {
                   "listen": "prerequest",
                   "script": {
-                    "exec": [
-                      ""
-                    ],
+                    "exec": [""],
                     "type": "text/javascript",
                     "packages": {},
                     "requests": {}
@@ -2002,9 +1777,7 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/lecturer/syllabus/{{syllabus_id}}/move-to-draft?status=REQUESTEDIT",
-                  "host": [
-                    "{{base_url}}"
-                  ],
+                  "host": ["{{base_url}}"],
                   "path": [
                     "api",
                     "lecturer",
@@ -2029,9 +1802,7 @@
                 {
                   "listen": "prerequest",
                   "script": {
-                    "exec": [
-                      ""
-                    ],
+                    "exec": [""],
                     "type": "text/javascript",
                     "packages": {},
                     "requests": {}
@@ -2068,9 +1839,7 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/lecturer/syllabus/{{syllabus_id}}/resubmit?status=REQUESTEDIT&status =REJECTED",
-                  "host": [
-                    "{{base_url}}"
-                  ],
+                  "host": ["{{base_url}}"],
                   "path": [
                     "api",
                     "lecturer",
@@ -2100,9 +1869,7 @@
                 {
                   "listen": "prerequest",
                   "script": {
-                    "exec": [
-                      ""
-                    ],
+                    "exec": [""],
                     "type": "text/javascript",
                     "packages": {},
                     "requests": {}
@@ -2155,15 +1922,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/lecturer/syllabus/{{syllabus_id}}",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "lecturer",
-                    "syllabus",
-                    "{{syllabus_id}}"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "lecturer", "syllabus", "{{syllabus_id}}"]
                 }
               },
               "response": []
@@ -2202,9 +1962,7 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/lecturer/syllabus/{{principal_syllabus_id}}/new-version?status=PUBLISHED",
-                  "host": [
-                    "{{base_url}}"
-                  ],
+                  "host": ["{{base_url}}"],
                   "path": [
                     "api",
                     "lecturer",
@@ -2252,15 +2010,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/lecturer/syllabus/my",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "lecturer",
-                    "syllabus",
-                    "my"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "lecturer", "syllabus", "my"]
                 }
               },
               "response": []
@@ -2291,15 +2042,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/lecturer/syllabus/{{syllabus_id}}",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "lecturer",
-                    "syllabus",
-                    "{{syllabus_id}}"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "lecturer", "syllabus", "{{syllabus_id}}"]
                 }
               },
               "response": []
@@ -2330,9 +2074,7 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/lecturer/syllabus/course/{{course_id}}",
-                  "host": [
-                    "{{base_url}}"
-                  ],
+                  "host": ["{{base_url}}"],
                   "path": [
                     "api",
                     "lecturer",
@@ -2362,9 +2104,7 @@
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {},
-                "exec": [
-                  ""
-                ]
+                "exec": [""]
               }
             },
             {
@@ -2373,9 +2113,7 @@
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {},
-                "exec": [
-                  ""
-                ]
+                "exec": [""]
               }
             }
           ]
@@ -2417,16 +2155,8 @@
                     },
                     "url": {
                       "raw": "{{base_url}}/api/hod/syllabus/42/request-edit",
-                      "host": [
-                        "{{base_url}}"
-                      ],
-                      "path": [
-                        "api",
-                        "hod",
-                        "syllabus",
-                        "42",
-                        "request-edit"
-                      ]
+                      "host": ["{{base_url}}"],
+                      "path": ["api", "hod", "syllabus", "42", "request-edit"]
                     }
                   },
                   "response": []
@@ -2453,16 +2183,8 @@
                     "header": [],
                     "url": {
                       "raw": "{{base_url}}/api/hod/syllabus/42/approve?status=SUBMITTED",
-                      "host": [
-                        "{{base_url}}"
-                      ],
-                      "path": [
-                        "api",
-                        "hod",
-                        "syllabus",
-                        "42",
-                        "approve"
-                      ],
+                      "host": ["{{base_url}}"],
+                      "path": ["api", "hod", "syllabus", "42", "approve"],
                       "query": [
                         {
                           "key": "status",
@@ -2504,16 +2226,8 @@
                     },
                     "url": {
                       "raw": "{{base_url}}/api/hod/syllabus/42/reject?status=SUBMITTED",
-                      "host": [
-                        "{{base_url}}"
-                      ],
-                      "path": [
-                        "api",
-                        "hod",
-                        "syllabus",
-                        "42",
-                        "reject"
-                      ],
+                      "host": ["{{base_url}}"],
+                      "path": ["api", "hod", "syllabus", "42", "reject"],
                       "query": [
                         {
                           "key": "status",
@@ -2568,9 +2282,7 @@
                 {
                   "listen": "prerequest",
                   "script": {
-                    "exec": [
-                      ""
-                    ],
+                    "exec": [""],
                     "type": "text/javascript",
                     "packages": {},
                     "requests": {}
@@ -2582,14 +2294,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/hod/syllabus?status=SUBMITTED",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "hod",
-                    "syllabus"
-                  ],
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "hod", "syllabus"],
                   "query": [
                     {
                       "key": "status",
@@ -2630,9 +2336,7 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/hod/syllabus/{{hod_syllabus_id}}/approve?status=SUBMITTED",
-                  "host": [
-                    "{{base_url}}"
-                  ],
+                  "host": ["{{base_url}}"],
                   "path": [
                     "api",
                     "hod",
@@ -2690,9 +2394,7 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/hod/syllabus/{{hod_syllabus_id}}/request-edit",
-                  "host": [
-                    "{{base_url}}"
-                  ],
+                  "host": ["{{base_url}}"],
                   "path": [
                     "api",
                     "hod",
@@ -2743,9 +2445,7 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/hod/syllabus/{{hod_syllabus_id}}/reject?status=SUBMITTED",
-                  "host": [
-                    "{{base_url}}"
-                  ],
+                  "host": ["{{base_url}}"],
                   "path": [
                     "api",
                     "hod",
@@ -2801,9 +2501,7 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/hod/syllabus/{{course_id}}/syllabi?status=SUBMITTED",
-                  "host": [
-                    "{{base_url}}"
-                  ],
+                  "host": ["{{base_url}}"],
                   "path": [
                     "api",
                     "hod",
@@ -2858,15 +2556,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/hod/syllabus/courses?syllabusStatus=SUBMITTED",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "hod",
-                    "syllabus",
-                    "courses"
-                  ],
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "hod", "syllabus", "courses"],
                   "query": [
                     {
                       "key": "syllabusStatus",
@@ -2895,9 +2586,7 @@
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {},
-                "exec": [
-                  ""
-                ]
+                "exec": [""]
               }
             },
             {
@@ -2906,9 +2595,7 @@
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {},
-                "exec": [
-                  ""
-                ]
+                "exec": [""]
               }
             }
           ]
@@ -2941,16 +2628,8 @@
                     "header": [],
                     "url": {
                       "raw": "{{base_url}}/api/aa/syllabus/42/approve",
-                      "host": [
-                        "{{base_url}}"
-                      ],
-                      "path": [
-                        "api",
-                        "aa",
-                        "syllabus",
-                        "42",
-                        "approve"
-                      ]
+                      "host": ["{{base_url}}"],
+                      "path": ["api", "aa", "syllabus", "42", "approve"]
                     }
                   },
                   "response": []
@@ -2986,16 +2665,8 @@
                     },
                     "url": {
                       "raw": "{{base_url}}/api/aa/syllabus/42/reject?status=HOD_APPROVED",
-                      "host": [
-                        "{{base_url}}"
-                      ],
-                      "path": [
-                        "api",
-                        "aa",
-                        "syllabus",
-                        "42",
-                        "reject"
-                      ],
+                      "host": ["{{base_url}}"],
+                      "path": ["api", "aa", "syllabus", "42", "reject"],
                       "query": [
                         {
                           "key": "status",
@@ -3037,16 +2708,8 @@
                     },
                     "url": {
                       "raw": "{{base_url}}/api/aa/syllabus/courses/relations",
-                      "host": [
-                        "{{base_url}}"
-                      ],
-                      "path": [
-                        "api",
-                        "aa",
-                        "syllabus",
-                        "courses",
-                        "relations"
-                      ]
+                      "host": ["{{base_url}}"],
+                      "path": ["api", "aa", "syllabus", "courses", "relations"]
                     }
                   },
                   "response": []
@@ -3098,14 +2761,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/aa/syllabus?status=HOD_APPROVED",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "aa",
-                    "syllabus"
-                  ],
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "aa", "syllabus"],
                   "query": [
                     {
                       "key": "status",
@@ -3146,9 +2803,7 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/aa/syllabus/{{aa_syllabus_id}}/approve",
-                  "host": [
-                    "{{base_url}}"
-                  ],
+                  "host": ["{{base_url}}"],
                   "path": [
                     "api",
                     "aa",
@@ -3199,9 +2854,7 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/aa/syllabus/{{aa_syllabus_id}}/reject?status=HOD_APPROVED",
-                  "host": [
-                    "{{base_url}}"
-                  ],
+                  "host": ["{{base_url}}"],
                   "path": [
                     "api",
                     "aa",
@@ -3250,9 +2903,7 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/aa/syllabus/courses/{{course_id}}/relations",
-                  "host": [
-                    "{{base_url}}"
-                  ],
+                  "host": ["{{base_url}}"],
                   "path": [
                     "api",
                     "aa",
@@ -3298,16 +2949,8 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/aa/syllabus/courses/relations",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "aa",
-                    "syllabus",
-                    "courses",
-                    "relations"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "aa", "syllabus", "courses", "relations"]
                 }
               },
               "response": []
@@ -3330,9 +2973,7 @@
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {},
-                "exec": [
-                  ""
-                ]
+                "exec": [""]
               }
             },
             {
@@ -3341,9 +2982,7 @@
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {},
-                "exec": [
-                  ""
-                ]
+                "exec": [""]
               }
             }
           ]
@@ -3376,9 +3015,7 @@
                     "header": [],
                     "url": {
                       "raw": "{{base_url}}/api/principal/syllabus/10000/approve",
-                      "host": [
-                        "{{base_url}}"
-                      ],
+                      "host": ["{{base_url}}"],
                       "path": [
                         "api",
                         "principal",
@@ -3412,9 +3049,7 @@
                     "header": [],
                     "url": {
                       "raw": "{{base_url}}/api/principal/syllabus/1000/publish",
-                      "host": [
-                        "{{base_url}}"
-                      ],
+                      "host": ["{{base_url}}"],
                       "path": [
                         "api",
                         "principal",
@@ -3448,16 +3083,8 @@
                     "header": [],
                     "url": {
                       "raw": "{{base_url}}/api/principal/syllabus/1000/reject",
-                      "host": [
-                        "{{base_url}}"
-                      ],
-                      "path": [
-                        "api",
-                        "principal",
-                        "syllabus",
-                        "1000",
-                        "reject"
-                      ]
+                      "host": ["{{base_url}}"],
+                      "path": ["api", "principal", "syllabus", "1000", "reject"]
                     }
                   },
                   "response": []
@@ -3502,14 +3129,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/principal/syllabus?status=AA_APPROVED",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "principal",
-                    "syllabus"
-                  ],
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "principal", "syllabus"],
                   "query": [
                     {
                       "key": "status",
@@ -3559,9 +3180,7 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/principal/syllabus/{{principal_syllabus_id}}/approve",
-                  "host": [
-                    "{{base_url}}"
-                  ],
+                  "host": ["{{base_url}}"],
                   "path": [
                     "api",
                     "principal",
@@ -3611,9 +3230,7 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/principal/syllabus/{{principal_syllabus_id}}/publish",
-                  "host": [
-                    "{{base_url}}"
-                  ],
+                  "host": ["{{base_url}}"],
                   "path": [
                     "api",
                     "principal",
@@ -3663,9 +3280,7 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/principal/syllabus/{{principal_syllabus_id}}/reject",
-                  "host": [
-                    "{{base_url}}"
-                  ],
+                  "host": ["{{base_url}}"],
                   "path": [
                     "api",
                     "principal",
@@ -3695,9 +3310,7 @@
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {},
-                "exec": [
-                  ""
-                ]
+                "exec": [""]
               }
             },
             {
@@ -3706,9 +3319,7 @@
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {},
-                "exec": [
-                  ""
-                ]
+                "exec": [""]
               }
             }
           ]
@@ -3744,15 +3355,8 @@
                     "header": [],
                     "url": {
                       "raw": "{{base_url}}/api/student/syllabus/available",
-                      "host": [
-                        "{{base_url}}"
-                      ],
-                      "path": [
-                        "api",
-                        "student",
-                        "syllabus",
-                        "available"
-                      ]
+                      "host": ["{{base_url}}"],
+                      "path": ["api", "student", "syllabus", "available"]
                     }
                   },
                   "response": []
@@ -3781,16 +3385,8 @@
                     "header": [],
                     "url": {
                       "raw": "{{base_url}}/api/student/syllabus/course/10000",
-                      "host": [
-                        "{{base_url}}"
-                      ],
-                      "path": [
-                        "api",
-                        "student",
-                        "syllabus",
-                        "course",
-                        "10000"
-                      ]
+                      "host": ["{{base_url}}"],
+                      "path": ["api", "student", "syllabus", "course", "10000"]
                     }
                   },
                   "response": []
@@ -3819,15 +3415,8 @@
                     "header": [],
                     "url": {
                       "raw": "{{base_url}}/api/student/syllabus/search?keyword=aaaa",
-                      "host": [
-                        "{{base_url}}"
-                      ],
-                      "path": [
-                        "api",
-                        "student",
-                        "syllabus",
-                        "search"
-                      ],
+                      "host": ["{{base_url}}"],
+                      "path": ["api", "student", "syllabus", "search"],
                       "query": [
                         {
                           "key": "keyword",
@@ -3862,15 +3451,8 @@
                     "header": [],
                     "url": {
                       "raw": "{{base_url}}/api/student/syllabus/1000",
-                      "host": [
-                        "{{base_url}}"
-                      ],
-                      "path": [
-                        "api",
-                        "student",
-                        "syllabus",
-                        "1000"
-                      ]
+                      "host": ["{{base_url}}"],
+                      "path": ["api", "student", "syllabus", "1000"]
                     }
                   },
                   "response": []
@@ -3899,9 +3481,7 @@
                     "header": [],
                     "url": {
                       "raw": "{{base_url}}/api/student/syllabus/subscribe/1000",
-                      "host": [
-                        "{{base_url}}"
-                      ],
+                      "host": ["{{base_url}}"],
                       "path": [
                         "api",
                         "student",
@@ -3953,15 +3533,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/student/syllabus/available",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "student",
-                    "syllabus",
-                    "available"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "student", "syllabus", "available"]
                 }
               },
               "response": []
@@ -3988,9 +3561,7 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/student/syllabus/subscribe/{{student_course_id}}",
-                  "host": [
-                    "{{base_url}}"
-                  ],
+                  "host": ["{{base_url}}"],
                   "path": [
                     "api",
                     "student",
@@ -4024,15 +3595,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/student/syllabus/my-courses",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "student",
-                    "syllabus",
-                    "my-courses"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "student", "syllabus", "my-courses"]
                 }
               },
               "response": []
@@ -4067,9 +3631,7 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/student/syllabus/course/{{student_course_id}}",
-                  "host": [
-                    "{{base_url}}"
-                  ],
+                  "host": ["{{base_url}}"],
                   "path": [
                     "api",
                     "student",
@@ -4103,9 +3665,7 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/student/syllabus/{{student_syllabus_id}}",
-                  "host": [
-                    "{{base_url}}"
-                  ],
+                  "host": ["{{base_url}}"],
                   "path": [
                     "api",
                     "student",
@@ -4123,9 +3683,7 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/student/syllabus/subscribe/{{student_course_id}}",
-                  "host": [
-                    "{{base_url}}"
-                  ],
+                  "host": ["{{base_url}}"],
                   "path": [
                     "api",
                     "student",
@@ -4167,15 +3725,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/student/syllabus/search",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "student",
-                    "syllabus",
-                    "search"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "student", "syllabus", "search"]
                 }
               },
               "response": []
@@ -4198,9 +3749,7 @@
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {},
-                "exec": [
-                  ""
-                ]
+                "exec": [""]
               }
             },
             {
@@ -4209,9 +3758,7 @@
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {},
-                "exec": [
-                  ""
-                ]
+                "exec": [""]
               }
             }
           ]
@@ -4224,9 +3771,7 @@
             "type": "text/javascript",
             "packages": {},
             "requests": {},
-            "exec": [
-              ""
-            ]
+            "exec": [""]
           }
         },
         {
@@ -4235,9 +3780,7 @@
             "type": "text/javascript",
             "packages": {},
             "requests": {},
-            "exec": [
-              ""
-            ]
+            "exec": [""]
           }
         }
       ]
@@ -4303,14 +3846,8 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/aa/plos",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "aa",
-                    "plos"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "aa", "plos"]
                 }
               },
               "response": []
@@ -4368,15 +3905,8 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/aa/plos/{{ploId}}",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "aa",
-                    "plos",
-                    "{{ploId}}"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "aa", "plos", "{{ploId}}"]
                 }
               },
               "response": []
@@ -4414,15 +3944,8 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/aa/plos/{{ploId}}",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "aa",
-                    "plos",
-                    "{{ploId}}"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "aa", "plos", "{{ploId}}"]
                 }
               },
               "response": []
@@ -4453,16 +3976,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/aa/plos/{{ploId}}/hard",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "aa",
-                    "plos",
-                    "{{ploId}}",
-                    "hard"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "aa", "plos", "{{ploId}}", "hard"]
                 }
               },
               "response": []
@@ -4485,9 +4000,7 @@
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {},
-                "exec": [
-                  ""
-                ]
+                "exec": [""]
               }
             },
             {
@@ -4496,9 +4009,7 @@
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {},
-                "exec": [
-                  ""
-                ]
+                "exec": [""]
               }
             }
           ]
@@ -4560,9 +4071,7 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/lecturer/syllabus/{{syllabus_Id}}/clos",
-                  "host": [
-                    "{{base_url}}"
-                  ],
+                  "host": ["{{base_url}}"],
                   "path": [
                     "api",
                     "lecturer",
@@ -4623,15 +4132,8 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/lecturer/clos/{{cloId}}",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "lecturer",
-                    "clos",
-                    "{{cloId}}"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "lecturer", "clos", "{{cloId}}"]
                 }
               },
               "response": []
@@ -4662,15 +4164,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/lecturer/clos/{{cloId}}",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "lecturer",
-                    "clos",
-                    "{{cloId}}"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "lecturer", "clos", "{{cloId}}"]
                 }
               },
               "response": []
@@ -4693,9 +4188,7 @@
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {},
-                "exec": [
-                  ""
-                ]
+                "exec": [""]
               }
             },
             {
@@ -4704,9 +4197,7 @@
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {},
-                "exec": [
-                  ""
-                ]
+                "exec": [""]
               }
             }
           ]
@@ -4772,14 +4263,8 @@
                     },
                     "url": {
                       "raw": "{{base_url}}/api/aa/plos",
-                      "host": [
-                        "{{base_url}}"
-                      ],
-                      "path": [
-                        "api",
-                        "aa",
-                        "plos"
-                      ]
+                      "host": ["{{base_url}}"],
+                      "path": ["api", "aa", "plos"]
                     }
                   },
                   "response": []
@@ -4830,14 +4315,8 @@
                     },
                     "url": {
                       "raw": "{{base_url}}/api/aa/plos",
-                      "host": [
-                        "{{base_url}}"
-                      ],
-                      "path": [
-                        "api",
-                        "aa",
-                        "plos"
-                      ]
+                      "host": ["{{base_url}}"],
+                      "path": ["api", "aa", "plos"]
                     }
                   },
                   "response": []
@@ -4887,15 +4366,8 @@
                     },
                     "url": {
                       "raw": "{{base_url}}/api/aa/plos/9999",
-                      "host": [
-                        "{{base_url}}"
-                      ],
-                      "path": [
-                        "api",
-                        "aa",
-                        "plos",
-                        "9999"
-                      ]
+                      "host": ["{{base_url}}"],
+                      "path": ["api", "aa", "plos", "9999"]
                     }
                   },
                   "response": []
@@ -4945,15 +4417,8 @@
                     },
                     "url": {
                       "raw": "{{base_url}}/api/aa/plos/{{ploId}}",
-                      "host": [
-                        "{{base_url}}"
-                      ],
-                      "path": [
-                        "api",
-                        "aa",
-                        "plos",
-                        "{{ploId}}"
-                      ]
+                      "host": ["{{base_url}}"],
+                      "path": ["api", "aa", "plos", "{{ploId}}"]
                     }
                   },
                   "response": []
@@ -4990,15 +4455,8 @@
                     },
                     "url": {
                       "raw": "{{base_url}}/api/aa/plos/9999",
-                      "host": [
-                        "{{base_url}}"
-                      ],
-                      "path": [
-                        "api",
-                        "aa",
-                        "plos",
-                        "9999"
-                      ]
+                      "host": ["{{base_url}}"],
+                      "path": ["api", "aa", "plos", "9999"]
                     }
                   },
                   "response": []
@@ -5025,16 +4483,8 @@
                     "header": [],
                     "url": {
                       "raw": "{{base_url}}/api/aa/plos/9999/hard",
-                      "host": [
-                        "{{base_url}}"
-                      ],
-                      "path": [
-                        "api",
-                        "aa",
-                        "plos",
-                        "9999",
-                        "hard"
-                      ]
+                      "host": ["{{base_url}}"],
+                      "path": ["api", "aa", "plos", "9999", "hard"]
                     }
                   },
                   "response": []
@@ -5065,16 +4515,8 @@
                     "header": [],
                     "url": {
                       "raw": "{{base_url}}/api/aa/plos/{{ploId}}/hard",
-                      "host": [
-                        "{{base_url}}"
-                      ],
-                      "path": [
-                        "api",
-                        "aa",
-                        "plos",
-                        "{{ploId}}",
-                        "hard"
-                      ]
+                      "host": ["{{base_url}}"],
+                      "path": ["api", "aa", "plos", "{{ploId}}", "hard"]
                     }
                   },
                   "response": []
@@ -5097,9 +4539,7 @@
                     "type": "text/javascript",
                     "packages": {},
                     "requests": {},
-                    "exec": [
-                      ""
-                    ]
+                    "exec": [""]
                   }
                 },
                 {
@@ -5108,9 +4548,7 @@
                     "type": "text/javascript",
                     "packages": {},
                     "requests": {},
-                    "exec": [
-                      ""
-                    ]
+                    "exec": [""]
                   }
                 }
               ]
@@ -5172,9 +4610,7 @@
                     },
                     "url": {
                       "raw": "{{base_url}}/api/lecturer/syllabus/{{syllabus_Id}}/clos",
-                      "host": [
-                        "{{base_url}}"
-                      ],
+                      "host": ["{{base_url}}"],
                       "path": [
                         "api",
                         "lecturer",
@@ -5233,9 +4669,7 @@
                     },
                     "url": {
                       "raw": "{{base_url}}/api/lecturer/syllabus/{{syllabus_Id}}/clos",
-                      "host": [
-                        "{{base_url}}"
-                      ],
+                      "host": ["{{base_url}}"],
                       "path": [
                         "api",
                         "lecturer",
@@ -5294,16 +4728,8 @@
                     },
                     "url": {
                       "raw": "{{base_url}}/api/lecturer/syllabus/9999/clos",
-                      "host": [
-                        "{{base_url}}"
-                      ],
-                      "path": [
-                        "api",
-                        "lecturer",
-                        "syllabus",
-                        "9999",
-                        "clos"
-                      ]
+                      "host": ["{{base_url}}"],
+                      "path": ["api", "lecturer", "syllabus", "9999", "clos"]
                     }
                   },
                   "response": []
@@ -5352,15 +4778,8 @@
                     },
                     "url": {
                       "raw": "{{base_url}}/api/lecturer/clos/{{cloId}}",
-                      "host": [
-                        "{{base_url}}"
-                      ],
-                      "path": [
-                        "api",
-                        "lecturer",
-                        "clos",
-                        "{{cloId}}"
-                      ]
+                      "host": ["{{base_url}}"],
+                      "path": ["api", "lecturer", "clos", "{{cloId}}"]
                     }
                   },
                   "response": []
@@ -5408,15 +4827,8 @@
                     },
                     "url": {
                       "raw": "{{base_url}}/api/lecturer/clos/9999",
-                      "host": [
-                        "{{base_url}}"
-                      ],
-                      "path": [
-                        "api",
-                        "lecturer",
-                        "clos",
-                        "9999"
-                      ]
+                      "host": ["{{base_url}}"],
+                      "path": ["api", "lecturer", "clos", "9999"]
                     }
                   },
                   "response": []
@@ -5444,15 +4856,8 @@
                     "header": [],
                     "url": {
                       "raw": "{{base_url}}/api/lecturer/clos/9999",
-                      "host": [
-                        "{{base_url}}"
-                      ],
-                      "path": [
-                        "api",
-                        "lecturer",
-                        "clos",
-                        "9999"
-                      ]
+                      "host": ["{{base_url}}"],
+                      "path": ["api", "lecturer", "clos", "9999"]
                     }
                   },
                   "response": []
@@ -5483,15 +4888,8 @@
                     "header": [],
                     "url": {
                       "raw": "{{base_url}}/api/lecturer/clos/{{cloId}}",
-                      "host": [
-                        "{{base_url}}"
-                      ],
-                      "path": [
-                        "api",
-                        "lecturer",
-                        "clos",
-                        "{{cloId}}"
-                      ]
+                      "host": ["{{base_url}}"],
+                      "path": ["api", "lecturer", "clos", "{{cloId}}"]
                     }
                   },
                   "response": []
@@ -5514,9 +4912,7 @@
                     "type": "text/javascript",
                     "packages": {},
                     "requests": {},
-                    "exec": [
-                      ""
-                    ]
+                    "exec": [""]
                   }
                 },
                 {
@@ -5525,9 +4921,7 @@
                     "type": "text/javascript",
                     "packages": {},
                     "requests": {},
-                    "exec": [
-                      ""
-                    ]
+                    "exec": [""]
                   }
                 }
               ]
@@ -5545,9 +4939,7 @@
             "type": "text/javascript",
             "packages": {},
             "requests": {},
-            "exec": [
-              ""
-            ]
+            "exec": [""]
           }
         },
         {
@@ -5556,9 +4948,7 @@
             "type": "text/javascript",
             "packages": {},
             "requests": {},
-            "exec": [
-              ""
-            ]
+            "exec": [""]
           }
         }
       ]
@@ -5595,9 +4985,7 @@
                 {
                   "listen": "prerequest",
                   "script": {
-                    "exec": [
-                      ""
-                    ],
+                    "exec": [""],
                     "type": "text/javascript",
                     "packages": {},
                     "requests": {}
@@ -5618,15 +5006,8 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/hod/reviews/assign",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "hod",
-                    "reviews",
-                    "assign"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "hod", "reviews", "assign"]
                 }
               },
               "response": []
@@ -5659,9 +5040,7 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/hod/reviews/syllabus/{{syllabus_id}}",
-                  "host": [
-                    "{{base_url}}"
-                  ],
+                  "host": ["{{base_url}}"],
                   "path": [
                     "api",
                     "hod",
@@ -5695,15 +5074,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/hod/reviews/{{assignment_id}}",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "hod",
-                    "reviews",
-                    "{{assignment_id}}"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "hod", "reviews", "{{assignment_id}}"]
                 }
               },
               "response": []
@@ -5734,9 +5106,7 @@
                 {
                   "listen": "prerequest",
                   "script": {
-                    "exec": [
-                      ""
-                    ],
+                    "exec": [""],
                     "type": "text/javascript",
                     "packages": {},
                     "requests": {}
@@ -5757,15 +5127,8 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/hod/reviews/assign",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "hod",
-                    "reviews",
-                    "assign"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "hod", "reviews", "assign"]
                 }
               },
               "response": []
@@ -5788,9 +5151,7 @@
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {},
-                "exec": [
-                  ""
-                ]
+                "exec": [""]
               }
             },
             {
@@ -5799,9 +5160,7 @@
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {},
-                "exec": [
-                  ""
-                ]
+                "exec": [""]
               }
             }
           ]
@@ -5841,15 +5200,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/reviewer/reviews/my",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "reviewer",
-                    "reviews",
-                    "my"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "reviewer", "reviews", "my"]
                 }
               },
               "response": []
@@ -5882,9 +5234,7 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/reviewer/reviews/{{assignment_id}}/start",
-                  "host": [
-                    "{{base_url}}"
-                  ],
+                  "host": ["{{base_url}}"],
                   "path": [
                     "api",
                     "reviewer",
@@ -5939,15 +5289,8 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/reviews/{{assignment_id}}/comments",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "reviews",
-                    "{{assignment_id}}",
-                    "comments"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "reviews", "{{assignment_id}}", "comments"]
                 }
               },
               "response": []
@@ -5981,15 +5324,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/reviews/{{assignment_id}}/comments",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "reviews",
-                    "{{assignment_id}}",
-                    "comments"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "reviews", "{{assignment_id}}", "comments"]
                 }
               },
               "response": []
@@ -6000,9 +5336,7 @@
                 {
                   "listen": "test",
                   "script": {
-                    "exec": [
-                      ""
-                    ],
+                    "exec": [""],
                     "type": "text/javascript",
                     "packages": {},
                     "requests": {}
@@ -6034,14 +5368,8 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/comments/{{comment_id}}",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "comments",
-                    "{{comment_id}}"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "comments", "{{comment_id}}"]
                 }
               },
               "response": []
@@ -6074,9 +5402,7 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/reviewer/reviews/{{assignment_id}}/done",
-                  "host": [
-                    "{{base_url}}"
-                  ],
+                  "host": ["{{base_url}}"],
                   "path": [
                     "api",
                     "reviewer",
@@ -6110,14 +5436,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/comments/{{comment_id}}",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "comments",
-                    "{{comment_id}}"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "comments", "{{comment_id}}"]
                 }
               },
               "response": []
@@ -6163,15 +5483,8 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/syllabus/{{syllabus_id}}/comments",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "syllabus",
-                    "{{syllabus_id}}",
-                    "comments"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "syllabus", "{{syllabus_id}}", "comments"]
                 }
               },
               "response": []
@@ -6204,15 +5517,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/syllabus/{{syllabus_id}}/comments",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "syllabus",
-                    "{{syllabus_id}}",
-                    "comments"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "syllabus", "{{syllabus_id}}", "comments"]
                 }
               },
               "response": []
@@ -6235,9 +5541,7 @@
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {},
-                "exec": [
-                  ""
-                ]
+                "exec": [""]
               }
             },
             {
@@ -6246,9 +5550,7 @@
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {},
-                "exec": [
-                  ""
-                ]
+                "exec": [""]
               }
             }
           ]
@@ -6306,14 +5608,8 @@
                 },
                 "url": {
                   "raw": "{{base_url}}/api/auth/login",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "auth",
-                    "login"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "auth", "login"]
                 }
               },
               "response": []
@@ -6393,15 +5689,8 @@
             },
             "url": {
               "raw": "{{base_url}}/api/admin/users/bulk-create",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "admin",
-                "users",
-                "bulk-create"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users", "bulk-create"]
             }
           },
           "response": []
@@ -6476,15 +5765,8 @@
             },
             "url": {
               "raw": "{{base_url}}/api/admin/users/create",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "admin",
-                "users",
-                "create"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users", "create"]
             }
           },
           "response": []
@@ -6530,9 +5812,7 @@
             {
               "listen": "prerequest",
               "script": {
-                "exec": [
-                  ""
-                ],
+                "exec": [""],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -6544,14 +5824,8 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/admin/users",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "admin",
-                "users"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users"]
             }
           },
           "response": []
@@ -6562,9 +5836,7 @@
             {
               "listen": "test",
               "script": {
-                "exec": [
-                  ""
-                ],
+                "exec": [""],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -6592,16 +5864,8 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/admin/users/{{current_id}}/lock",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "admin",
-                "users",
-                "{{current_id}}",
-                "lock"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users", "{{current_id}}", "lock"]
             }
           },
           "response": []
@@ -6612,9 +5876,7 @@
             {
               "listen": "test",
               "script": {
-                "exec": [
-                  ""
-                ],
+                "exec": [""],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -6675,16 +5937,8 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/admin/users/{{current_id}}/unlock",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "admin",
-                "users",
-                "{{current_id}}",
-                "unlock"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users", "{{current_id}}", "unlock"]
             }
           },
           "response": []
@@ -6727,16 +5981,8 @@
             },
             "url": {
               "raw": "{{base_url}}/api/admin/users/{{current_id}}/role",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "admin",
-                "users",
-                "{{current_id}}",
-                "role"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users", "{{current_id}}", "role"]
             }
           },
           "response": []
@@ -6785,9 +6031,7 @@
             {
               "listen": "prerequest",
               "script": {
-                "exec": [
-                  ""
-                ],
+                "exec": [""],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -6808,15 +6052,8 @@
             },
             "url": {
               "raw": "{{base_url}}/api/admin/users/{{current_id}}",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "admin",
-                "users",
-                "{{current_id}}"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users", "{{current_id}}"]
             }
           },
           "response": []
@@ -6839,15 +6076,8 @@
             },
             "url": {
               "raw": "{{base_url}}/api/admin/users/import-excel",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "admin",
-                "users",
-                "import-excel"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users", "import-excel"]
             }
           },
           "response": []
@@ -6927,15 +6157,8 @@
             },
             "url": {
               "raw": "{{base_url}}/api/admin/users/create",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "admin",
-                "users",
-                "create"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users", "create"]
             }
           },
           "response": []
@@ -7008,15 +6231,8 @@
             },
             "url": {
               "raw": "{{base_url}}/api/admin/users/bulk-create",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "admin",
-                "users",
-                "bulk-create"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users", "bulk-create"]
             }
           },
           "response": []
@@ -7027,9 +6243,7 @@
             {
               "listen": "test",
               "script": {
-                "exec": [
-                  ""
-                ],
+                "exec": [""],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -7057,16 +6271,8 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/admin/users/{{current_id}}/lock",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "admin",
-                "users",
-                "{{current_id}}",
-                "lock"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users", "{{current_id}}", "lock"]
             }
           },
           "response": []
@@ -7077,9 +6283,7 @@
             {
               "listen": "test",
               "script": {
-                "exec": [
-                  ""
-                ],
+                "exec": [""],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -7140,16 +6344,8 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/admin/users/{{current_id}}/unlock",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "admin",
-                "users",
-                "{{current_id}}",
-                "unlock"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users", "{{current_id}}", "unlock"]
             }
           },
           "response": []
@@ -7192,16 +6388,8 @@
             },
             "url": {
               "raw": "{{base_url}}/api/admin/users/{{current_id}}/role",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "admin",
-                "users",
-                "{{current_id}}",
-                "role"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users", "{{current_id}}", "role"]
             }
           },
           "response": []
@@ -7281,15 +6469,8 @@
             },
             "url": {
               "raw": "{{base_url}}/api/admin/users/create",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "admin",
-                "users",
-                "create"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users", "create"]
             }
           },
           "response": []
@@ -7369,15 +6550,8 @@
             },
             "url": {
               "raw": "{{base_url}}/api/admin/users/create",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "admin",
-                "users",
-                "create"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users", "create"]
             }
           },
           "response": []
@@ -7400,9 +6574,7 @@
             "type": "text/javascript",
             "packages": {},
             "requests": {},
-            "exec": [
-              ""
-            ]
+            "exec": [""]
           }
         },
         {
@@ -7411,9 +6583,7 @@
             "type": "text/javascript",
             "packages": {},
             "requests": {},
-            "exec": [
-              ""
-            ]
+            "exec": [""]
           }
         }
       ]
@@ -7448,15 +6618,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/student/syllabus/notifications",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "student",
-                    "syllabus",
-                    "notifications"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "student", "syllabus", "notifications"]
                 }
               },
               "response": []
@@ -7468,9 +6631,7 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/student/syllabus/notifications/read-all",
-                  "host": [
-                    "{{base_url}}"
-                  ],
+                  "host": ["{{base_url}}"],
                   "path": [
                     "api",
                     "student",
@@ -7489,9 +6650,7 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/student/syllabus/notifications/{{notification_id}}/read",
-                  "host": [
-                    "{{base_url}}"
-                  ],
+                  "host": ["{{base_url}}"],
                   "path": [
                     "api",
                     "student",
@@ -7511,9 +6670,7 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/student/syllabus/notifications/unread-count",
-                  "host": [
-                    "{{base_url}}"
-                  ],
+                  "host": ["{{base_url}}"],
                   "path": [
                     "api",
                     "student",
@@ -7543,9 +6700,7 @@
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {},
-                "exec": [
-                  ""
-                ]
+                "exec": [""]
               }
             },
             {
@@ -7554,9 +6709,7 @@
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {},
-                "exec": [
-                  ""
-                ]
+                "exec": [""]
               }
             }
           ]
@@ -7591,16 +6744,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/notifications/me/10000/read",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "notifications",
-                    "me",
-                    "10000",
-                    "read"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "notifications", "me", "10000", "read"]
                 }
               },
               "response": []
@@ -7632,15 +6777,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/notifications/me/read-all",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "notifications",
-                    "me",
-                    "read-all"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "notifications", "me", "read-all"]
                 }
               },
               "response": []
@@ -7670,14 +6808,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/notifications/me",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "notifications",
-                    "me"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "notifications", "me"]
                 }
               },
               "response": []
@@ -7707,15 +6839,8 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/api/notifications/me/unread",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "api",
-                    "notifications",
-                    "me",
-                    "unread"
-                  ]
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "notifications", "me", "unread"]
                 }
               },
               "response": []
@@ -7752,14 +6877,8 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/notifications/me",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "notifications",
-                "me"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "notifications", "me"]
             }
           },
           "response": []
@@ -7789,15 +6908,8 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/notifications/me/unread",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "notifications",
-                "me",
-                "unread"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "notifications", "me", "unread"]
             }
           },
           "response": []
@@ -7848,16 +6960,8 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/notifications/me/{{current_id}}/read",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "notifications",
-                "me",
-                "{{current_id}}",
-                "read"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "notifications", "me", "{{current_id}}", "read"]
             }
           },
           "response": []
@@ -7887,15 +6991,8 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/notifications/me/read-all",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "notifications",
-                "me",
-                "read-all"
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "notifications", "me", "read-all"]
             }
           },
           "response": []
@@ -7918,9 +7015,7 @@
             "type": "text/javascript",
             "packages": {},
             "requests": {},
-            "exec": [
-              ""
-            ]
+            "exec": [""]
           }
         },
         {
@@ -7929,9 +7024,7 @@
             "type": "text/javascript",
             "packages": {},
             "requests": {},
-            "exec": [
-              ""
-            ]
+            "exec": [""]
           }
         }
       ]
@@ -7972,9 +7065,7 @@
         "type": "text/javascript",
         "packages": {},
         "requests": {},
-        "exec": [
-          ""
-        ]
+        "exec": [""]
       }
     },
     {
@@ -7983,9 +7074,7 @@
         "type": "text/javascript",
         "packages": {},
         "requests": {},
-        "exec": [
-          ""
-        ]
+        "exec": [""]
       }
     }
   ]
