@@ -1,6 +1,9 @@
 package com.example.LTJava.user.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
+
+import java.time.LocalDate;
 
 public class CreateUserRequest {
 
@@ -18,9 +21,9 @@ public class CreateUserRequest {
     private String cccd;
 
     @NotNull(message = "Ngày sinh không được để trống")
-    @Past(message = "Ngày sinh phải là một ngày trong quá khứ")
-    @Pattern(regexp = "^\\d{2}/\\d{2}/\\d{4}$", message = "Ngày sinh phải đúng định dạng dd/MM/yyyy")
-    private String dateOfBirth;
+    @Past(message = "Ngày sinh phải là ngày trong quá khứ")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate dateOfBirth;
 
     private String roleName;
 
@@ -29,8 +32,8 @@ public class CreateUserRequest {
 
     public String getFullName() { return fullName; }
     public void setFullName(String fullName) { this.fullName = fullName; }
-    public String getDateOfBirth() { return dateOfBirth; }
-    public void setDateOfBirth(String dateOfBirth) { this.dateOfBirth = dateOfBirth; }
+    public LocalDate  getDateOfBirth() { return dateOfBirth; }
+    public void setDateOfBirth(LocalDate  dateOfBirth) { this.dateOfBirth = dateOfBirth; }
     public String getCccd() { return cccd; }
     public void setCccd(String cccd) { this.cccd = cccd; }
     public String getRoleName() { return roleName; }

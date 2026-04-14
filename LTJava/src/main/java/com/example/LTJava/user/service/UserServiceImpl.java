@@ -69,17 +69,9 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Full name không được để trống");
         }
 
-        String dobStr = request.getDateOfBirth();
-        if (dobStr == null || dobStr.isBlank()) {
+        LocalDate dob = request.getDateOfBirth();
+        if (dob == null) {
             throw new IllegalArgumentException("Ngày sinh không được để trống");
-        }
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate dob;
-        try {
-            dob = LocalDate.parse(dobStr, formatter);
-        } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("Ngày sinh không đúng định dạng dd/MM/yyyy");
         }
 
         String rawPassword = dob.format(DateTimeFormatter.ofPattern("ddMMyyyy"));
@@ -98,8 +90,7 @@ public class UserServiceImpl implements UserService {
         user.setFullName(fullName);
         user.setDateOfBirth(dob);
         user.setActive(true);
-
-        user.getRoles().add(role);   // QUAN TRỌNG
+        user.getRoles().add(role);
 
         return userRepository.save(user);
     }
@@ -227,7 +218,7 @@ public class UserServiceImpl implements UserService {
                 System.out.println("IMPORT ROW: " + r.getExcelRowNumber()
                         + " | dobStr=" + dobStr);
 
-                req.setDateOfBirth(dobStr);
+                req.setDateOfBirth(r.getDateOfBirth());
 
                 createUser(req);
                 success++;
