@@ -7,7 +7,12 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:e2e": "start-server-and-test \"vite preview --host 127.0.0.1 --port 4173\" http://127.0.0.1:4173 \"codeceptjs run -c codecept.conf.cjs --steps\"",
+    "test:e2e:container": "cross-env BASE_URL=http://127.0.0.1:4173 codeceptjs run -c codecept.conf.cjs --steps",
+    "test:e2e:docker-live": "cross-env BASE_URL=http://127.0.0.1:5173 codeceptjs run -c codecept.conf.cjs --steps",
+    "test:e2e:headless": "codeceptjs run -c codecept.conf.cjs --steps",
+    "test:e2e:ui": "codeceptjs run -c codecept.conf.cjs --steps --grep @ui"
   },
   "dependencies": {
     "axios": "^1.13.2",
@@ -21,10 +26,14 @@
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
+    "codeceptjs": "^3.7.8",
+    "cross-env": "^7.0.3",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
+    "playwright": "^1.59.1",
+    "start-server-and-test": "^3.0.2",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.4",
     "vite": "^7.3.1"
