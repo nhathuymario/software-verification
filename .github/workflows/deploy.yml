@@ -87,6 +87,23 @@ jobs:
             rm -rf ${{ env.APP_DIR }}/init.sql
             rm -f ${{ env.APP_DIR }}/docker-compose.ec2.yml ${{ env.APP_DIR }}/deploy.env
 
+      - name: Precheck SSH connectivity from runner
+        shell: bash
+        run: |
+          HOST="${{ secrets.EC2_HOST }}"
+          PORT="${{ secrets.EC2_PORT || 22 }}"
+          echo "Checking TCP reachability to ${HOST}:${PORT}"
+          for i in 1 2 3 4 5; do
+            if timeout 6 bash -c "</dev/tcp/$HOST/$PORT"; then
+              echo "SSH port reachable"
+              exit 0
+            fi
+            echo "Attempt $i failed, retrying in 15s..."
+            sleep 15
+          done
+          echo "SSH port is unreachable from GitHub runner. Check EC2 SG/NACL/route/firewall."
+          exit 1
+
       - name: Upload deployment files
         id: upload_files_1
         uses: appleboy/scp-action@v0.1.7
@@ -96,8 +113,8 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           port: ${{ secrets.EC2_PORT || 22 }}
-          timeout: 2m
-          command_timeout: 20m
+          timeout: 5m
+          command_timeout: 30m
           source: docker-compose.ec2.yml,deploy.env,init.sql
           target: ${{ env.APP_DIR }}
           debug: true
@@ -105,14 +122,31 @@ jobs:
 
       - name: Upload deployment files (retry)
         if: steps.upload_files_1.outcome == 'failure'
+        id: upload_files_2
+        uses: appleboy/scp-action@v0.1.7
+        continue-on-error: true
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: ${{ secrets.EC2_PORT || 22 }}
+          timeout: 5m
+          command_timeout: 30m
+          source: docker-compose.ec2.yml,deploy.env,init.sql
+          target: ${{ env.APP_DIR }}
+          debug: true
+          overwrite: true
+
+      - name: Upload deployment files (retry 2)
+        if: steps.upload_files_2.outcome == 'failure'
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           port: ${{ secrets.EC2_PORT || 22 }}
-          timeout: 2m
-          command_timeout: 20m
+          timeout: 5m
+          command_timeout: 30m
           source: docker-compose.ec2.yml,deploy.env,init.sql
           target: ${{ env.APP_DIR }}
           debug: true
