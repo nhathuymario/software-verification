@@ -84,12 +84,31 @@ jobs:
           script: mkdir -p ${{ env.APP_DIR }}
 
       - name: Upload deployment files
+        id: upload_files_1
+        uses: appleboy/scp-action@v0.1.7
+        continue-on-error: true
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: ${{ secrets.EC2_PORT || 22 }}
+          timeout: 2m
+          command_timeout: 20m
+          source: docker-compose.ec2.yml,deploy.env,init.sql
+          target: ${{ env.APP_DIR }}
+          debug: true
+          overwrite: true
+
+      - name: Upload deployment files (retry)
+        if: steps.upload_files_1.outcome == 'failure'
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           port: ${{ secrets.EC2_PORT || 22 }}
+          timeout: 2m
+          command_timeout: 20m
           source: docker-compose.ec2.yml,deploy.env,init.sql
           target: ${{ env.APP_DIR }}
           debug: true
