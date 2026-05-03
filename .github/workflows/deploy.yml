@@ -162,10 +162,19 @@ jobs:
           debug: true
           script: |
             cd ${{ env.APP_DIR }}
+
             mv -f docker-compose.ec2.yml docker-compose.yml
             mv -f deploy.env .env.ec2
+
+            echo "Current deploy env:"
             grep -E '^(BACKEND_IMAGE|FRONTEND_IMAGE|IMAGE_TAG)=' .env.ec2
+
             echo "${{ secrets.DOCKERHUB_TOKEN }}" | sudo docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-            sudo docker compose pull
-            sudo docker compose up -d --force-recreate --remove-orphans
+
+            sudo docker compose --env-file .env.ec2 config | grep image
+
+            sudo docker compose --env-file .env.ec2 pull
+            sudo docker compose --env-file .env.ec2 up -d --pull always --force-recreate --remove-orphans
+
+            sudo docker ps
             sudo docker image prune -f
