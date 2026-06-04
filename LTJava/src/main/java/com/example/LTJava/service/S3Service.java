@@ -208,7 +208,7 @@ public class S3Service {
                                                                   inputStream, metadata);
         
         // Enable server-side encryption
-        putObjectRequest.setServerSideEncryption(com.amazonaws.services.s3.model.ServerSideEncryption.AES256);
+        metadata.setSSEAlgorithm(ObjectMetadata.AES_256_SERVER_SIDE_ENCRYPTION);
         
         amazonS3.putObject(putObjectRequest);
     }
