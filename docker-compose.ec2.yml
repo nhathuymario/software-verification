@@ -24,11 +24,15 @@ services:
       SPRING_PROFILES_ACTIVE: docker
       REDIS_HOST: redis
       REDIS_PORT: 6379
+      APP_UPLOAD_BASE_DIR: /app/uploads
+      APP_STORAGE_PDF_DIR: /app/uploads/pdfs
     depends_on:
       redis:
         condition: service_healthy
     ports:
       - "127.0.0.1:8081:8081"
+    volumes:
+      - backend_uploads:/app/uploads
 
   frontend:
     image: ${FRONTEND_IMAGE}:${IMAGE_TAG}
@@ -43,3 +47,4 @@ services:
 
 volumes:
   redis_data:
+  backend_uploads:

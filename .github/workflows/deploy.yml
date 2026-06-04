@@ -32,7 +32,9 @@ jobs:
         id: images
         shell: bash
         run: |
-          IMAGE_TAG="${GITHUB_SHA::7}"
+          DEPLOY_SHA="${{ github.event.workflow_run.head_sha || github.sha }}"
+          IMAGE_TAG="${DEPLOY_SHA::7}"
+          echo "sha=${DEPLOY_SHA}" >> "$GITHUB_OUTPUT"
           echo "tag=${IMAGE_TAG}" >> "$GITHUB_OUTPUT"
           echo "backend=${{ secrets.DOCKERHUB_USERNAME }}/backend-service" >> "$GITHUB_OUTPUT"
           echo "frontend=${{ secrets.DOCKERHUB_USERNAME }}/frontend-service" >> "$GITHUB_OUTPUT"
@@ -174,4 +176,5 @@ jobs:
             echo "${{ secrets.DOCKERHUB_TOKEN }}" | sudo docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
             sudo docker compose pull
             sudo docker compose up -d --force-recreate --remove-orphans
+            sudo docker compose ps
             sudo docker image prune -f

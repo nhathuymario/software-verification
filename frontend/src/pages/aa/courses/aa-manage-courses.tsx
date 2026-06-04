@@ -34,7 +34,7 @@ export default function AaManageCoursesPage() {
             if (status === 401 || status === 403) {
                 setErr("Bạn không có quyền hoặc phiên đăng nhập hết hạn.");
             } else {
-                setErr(e?.response?.data?.message || e?.message || "Không tải được danh sách môn học");
+                setErr(e?.response?.data?.message || e?.message || "Không tải được danh sách môn học test");
             }
         } finally {
             setLoading(false);
