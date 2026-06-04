@@ -6,9 +6,9 @@ spring:
     url: jdbc:mysql://localhost:3306/LTJavaTest?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: root
     password: ${DB_PASSWORD:default_pass}
-    hikari:
+  jpa:
     hibernate:
-      ddl-auto: update # dev, sau đổi validate
+      ddl-auto: update
     show-sql: false
     properties:
       hibernate:
