@@ -2,6 +2,7 @@ package com.example.LTJava.outcome.service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ByteArrayOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,7 +17,9 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -29,12 +32,16 @@ import com.example.LTJava.outcome.dto.PdfExportRes;
 import com.example.LTJava.outcome.dto.PloDto;
 import com.example.LTJava.syllabus.entity.Syllabus;
 import com.example.LTJava.syllabus.repository.SyllabusRepository;
+import com.example.ltjava.service.S3Service;
 
 @Service
 public class PdfExportServiceImpl implements PdfExportService {
 
     private final SyllabusRepository syllabusRepo;
     private final MatrixService matrixService;
+
+    @Autowired(required = false)
+    private S3Service s3Service;
 
     // cấu hình trong application.properties: app.storage.pdf-dir=uploads/pdfs
     private final Path pdfDir;
@@ -62,10 +69,16 @@ public class PdfExportServiceImpl implements PdfExportService {
         CloPloMatrixRes matrix = matrixService.getMatrix(syllabusId, scopeKey);
 
         try {
-            Files.createDirectories(pdfDir);
-            Path out = pdfDir.resolve("syllabus-" + syllabusId + ".pdf");
+            byte[] pdfBytes = generatePdfBytes(s, matrix);
+            String objectKey = getPdfObjectKey(syllabusId);
 
-            generatePdf(out, s, matrix);
+            if (s3Service != null) {
+                s3Service.uploadFileBytes(pdfBytes, objectKey, "application/pdf");
+            } else {
+                Files.createDirectories(pdfDir);
+                Path out = pdfDir.resolve("syllabus-" + syllabusId + ".pdf");
+                Files.write(out, pdfBytes);
+            }
 
             return new PdfExportRes(
                     syllabusId,
@@ -80,6 +93,15 @@ public class PdfExportServiceImpl implements PdfExportService {
 
     @Override
     public Resource loadPdf(Long syllabusId) {
+        String objectKey = getPdfObjectKey(syllabusId);
+
+        if (s3Service != null) {
+            if (!s3Service.fileExists(objectKey)) {
+                throw new IllegalArgumentException("PDF not found for syllabusId: " + syllabusId);
+            }
+            return new ByteArrayResource(s3Service.downloadFile(objectKey));
+        }
+
         Path p = pdfDir.resolve("syllabus-" + syllabusId + ".pdf");
         if (!Files.exists(p)) {
             throw new IllegalArgumentException("PDF not found for syllabusId: " + syllabusId);
@@ -99,7 +121,7 @@ public class PdfExportServiceImpl implements PdfExportService {
         }
     }
 
-    private void generatePdf(Path out, Syllabus s, CloPloMatrixRes matrix) throws IOException {
+    private byte[] generatePdfBytes(Syllabus s, CloPloMatrixRes matrix) throws IOException {
         try (PDDocument doc = new PDDocument()) {
 
             // ✅ Unicode fonts
@@ -178,8 +200,15 @@ public class PdfExportServiceImpl implements PdfExportService {
                 drawMatrixTable(cs, page, margin, y, matrix, fontRegular, fontBold);
             }
 
-            doc.save(out.toFile());
+            try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+                doc.save(outputStream);
+                return outputStream.toByteArray();
+            }
         }
+    }
+
+    private String getPdfObjectKey(Long syllabusId) {
+        return "pdfs/syllabus-" + syllabusId + ".pdf";
     }
 
     private void drawMatrixTable(PDPageContentStream cs, PDPage page, float x, float yTop,

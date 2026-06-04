@@ -68,8 +68,15 @@ jobs:
           BACKEND_IMAGE=${{ steps.images.outputs.backend }}
           FRONTEND_IMAGE=${{ steps.images.outputs.frontend }}
           IMAGE_TAG=${{ steps.images.outputs.tag }}
-          MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}
-          MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
+          DB_HOST=${{ secrets.RDS_HOST }}
+          DB_PORT=${{ secrets.RDS_PORT }}
+          DB_NAME=${{ secrets.RDS_DATABASE }}
+          DB_USER=${{ secrets.RDS_USERNAME }}
+          DB_PASSWORD=${{ secrets.RDS_PASSWORD }}
+          AWS_S3_BUCKET_NAME=${{ secrets.AWS_S3_BUCKET_NAME }}
+          AWS_S3_REGION=${{ secrets.AWS_S3_REGION }}
+          AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
           GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}
           EOF
 
@@ -84,7 +91,6 @@ jobs:
           script: |
             mkdir -p ${{ env.APP_DIR }}
             sudo chown -R ${{ secrets.EC2_USER }}:${{ secrets.EC2_USER }} ${{ env.APP_DIR }}
-            rm -rf ${{ env.APP_DIR }}/init.sql
             rm -f ${{ env.APP_DIR }}/docker-compose.ec2.yml ${{ env.APP_DIR }}/deploy.env
 
       - name: Precheck SSH connectivity from runner
@@ -115,7 +121,7 @@ jobs:
           port: ${{ secrets.EC2_PORT || 22 }}
           timeout: 5m
           command_timeout: 30m
-          source: docker-compose.ec2.yml,deploy.env,init.sql
+          source: docker-compose.ec2.yml,deploy.env
           target: ${{ env.APP_DIR }}
           debug: true
           overwrite: true
@@ -132,7 +138,7 @@ jobs:
           port: ${{ secrets.EC2_PORT || 22 }}
           timeout: 5m
           command_timeout: 30m
-          source: docker-compose.ec2.yml,deploy.env,init.sql
+          source: docker-compose.ec2.yml,deploy.env
           target: ${{ env.APP_DIR }}
           debug: true
           overwrite: true
@@ -147,7 +153,7 @@ jobs:
           port: ${{ secrets.EC2_PORT || 22 }}
           timeout: 5m
           command_timeout: 30m
-          source: docker-compose.ec2.yml,deploy.env,init.sql
+          source: docker-compose.ec2.yml,deploy.env
           target: ${{ env.APP_DIR }}
           debug: true
           overwrite: true
@@ -162,19 +168,10 @@ jobs:
           debug: true
           script: |
             cd ${{ env.APP_DIR }}
-
             mv -f docker-compose.ec2.yml docker-compose.yml
             mv -f deploy.env .env.ec2
-
-            echo "Current deploy env:"
             grep -E '^(BACKEND_IMAGE|FRONTEND_IMAGE|IMAGE_TAG)=' .env.ec2
-
             echo "${{ secrets.DOCKERHUB_TOKEN }}" | sudo docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-
-            sudo docker compose --env-file .env.ec2 config | grep image
-
-            sudo docker compose --env-file .env.ec2 pull
-            sudo docker compose --env-file .env.ec2 up -d --pull always --force-recreate --remove-orphans
-
-            sudo docker ps
+            sudo docker compose pull
+            sudo docker compose up -d --force-recreate --remove-orphans
             sudo docker image prune -f
